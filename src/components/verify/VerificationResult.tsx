@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { ShieldCheck, AlertTriangle, XCircle } from 'lucide-react';
 import { AuthCodeRecord } from '@/types/auth';
 
@@ -13,9 +13,14 @@ interface VerificationResultProps {
 export function VerificationResult({ status, record, productName }: VerificationResultProps) {
   if (!status) return null;
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0, scale: 0.95, y: 20 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } }
+    visible: { 
+      opacity: 1, 
+      scale: 1, 
+      y: 0, 
+      transition: { duration: 0.5, ease: 'easeOut' } 
+    }
   };
 
   if (status === 'invalid') {
