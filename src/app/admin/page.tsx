@@ -11,7 +11,7 @@ export default function AdminDashboard() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold text-white tracking-tight mb-2">Dashboard</h1>
-        <p className="text-zinc-400">Overview of your platform's performance and inventory.</p>
+        <p className="text-zinc-400">Overview of your platform&apos;s performance and inventory.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
