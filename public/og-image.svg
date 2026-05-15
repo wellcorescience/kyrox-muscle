@@ -1,0 +1,21 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#050505"/>
+  <rect x="60" y="60" width="1080" height="510" stroke="#B9A468" stroke-opacity="0.48"/>
+  <path d="M0 0H1200V630H0V0Z" fill="url(#paint0_radial)"/>
+  <path d="M238 408H962" stroke="url(#paint1_linear)" stroke-width="2"/>
+  <text x="600" y="290" text-anchor="middle" fill="#F7F4EA" font-family="Impact, sans-serif" font-size="118" letter-spacing="2">KYROX</text>
+  <text x="600" y="355" text-anchor="middle" fill="#D9CDA5" font-family="Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="16">MUSCLE</text>
+  <text x="600" y="442" text-anchor="middle" fill="#A1A1AA" font-family="Arial, sans-serif" font-size="28">Premium Performance Supplements</text>
+  <defs>
+    <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(600 120) rotate(90) scale(520 780)">
+      <stop stop-color="#D9CDA5" stop-opacity="0.2"/>
+      <stop offset="0.52" stop-color="#111114" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#050505" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="paint1_linear" x1="238" y1="409" x2="962" y2="409" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#050505"/>
+      <stop offset="0.5" stop-color="#D9CDA5"/>
+      <stop offset="1" stop-color="#050505"/>
+    </linearGradient>
+  </defs>
+</svg>
