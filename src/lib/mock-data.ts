@@ -31,6 +31,8 @@ export const mockProducts: AdminProduct[] = [
     stockQuantity: 150,
     status: 'In Stock',
     updatedAt: new Date().toISOString(),
+    mrp: 4000,
+    availableFlavors: ['Kulfi', 'Chocolate'],
   },
   {
     id: 'prod_2',
@@ -55,6 +57,8 @@ export const mockProducts: AdminProduct[] = [
     stockQuantity: 10,
     status: 'Low Stock',
     updatedAt: new Date().toISOString(),
+    mrp: 4200,
+    availableFlavors: ['Kulfi', 'Chocolate'],
   },
   {
     id: 'prod_3',
@@ -79,6 +83,8 @@ export const mockProducts: AdminProduct[] = [
     stockQuantity: 0,
     status: 'Out of Stock',
     updatedAt: new Date().toISOString(),
+    mrp: 8099,
+    availableFlavors: ['Kulfi', 'Chocolate'],
   }
 ];
 

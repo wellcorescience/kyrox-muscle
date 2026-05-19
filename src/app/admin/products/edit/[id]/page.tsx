@@ -1,18 +1,18 @@
 import { ProductForm } from '@/components/admin/ProductForm';
-import { mockProducts } from '@/lib/mock-data';
+import { getDbProductById } from '@/app/actions/product';
 import { notFound } from 'next/navigation';
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const product = mockProducts.find(p => p.id === id);
+  const res = await getDbProductById(id);
 
-  if (!product) {
+  if (!res.success || !res.product) {
     notFound();
   }
 
   return (
     <div className="max-w-5xl mx-auto">
-      <ProductForm initialData={product} isEditing={true} />
+      <ProductForm initialData={res.product as any} isEditing={true} />
     </div>
   );
 }

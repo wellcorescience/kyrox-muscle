@@ -1,9 +1,11 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 type ProductVisualProps = {
   name: string;
   tone?: "gold" | "blue" | "silver";
   size?: "sm" | "lg";
+  imageUrl?: string;
 };
 
 const toneStyles = {
@@ -28,8 +30,29 @@ export function ProductVisual({
   name,
   tone = "gold",
   size = "lg",
+  imageUrl,
 }: ProductVisualProps) {
   const styles = toneStyles[tone];
+  const isReal = imageUrl && (imageUrl.startsWith("http") || imageUrl.startsWith("/") || imageUrl.includes("."));
+
+  if (isReal) {
+    return (
+      <div
+        className={cn(
+          "relative mx-auto aspect-[3/4] w-full flex items-center justify-center",
+          size === "lg" ? "max-w-[19rem]" : "max-w-[13rem]",
+        )}
+      >
+        <Image
+          src={imageUrl}
+          alt={name}
+          fill
+          sizes={size === "lg" ? "(max-w-md) 100vw, 300px" : "(max-w-xs) 100vw, 200px"}
+          className="object-contain transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+    );
+  }
 
   return (
     <div

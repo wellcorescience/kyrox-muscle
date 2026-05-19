@@ -1,11 +1,13 @@
 "use client";
 
+import { useEffect, useState, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, SlidersHorizontal } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Search, SlidersHorizontal, Loader2 } from "lucide-react";
+import Image from "next/image";
+import { getDbProducts } from "@/app/actions/product";
+import type { Product } from "@/types/product";
 import {
   productCategories,
-  products,
   productSortOptions,
   type ProductCategoryFilter,
   type ProductSortOption,
@@ -14,14 +16,27 @@ import { ProductCard } from "@/components/product/product-card";
 import { cn } from "@/lib/utils";
 
 export function ShopBrowser() {
+  const [dbProducts, setDbProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<ProductCategoryFilter>("all");
   const [sort, setSort] = useState<ProductSortOption>("featured");
 
+  useEffect(() => {
+    async function load() {
+      const res = await getDbProducts();
+      if (res.success && res.products) {
+        setDbProducts(res.products);
+      }
+      setLoading(false);
+    }
+    load();
+  }, []);
+
   const filteredProducts = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
-    return products
+    return dbProducts
       .filter((product) => {
         const matchesQuery = product.name
           .toLowerCase()
@@ -46,10 +61,14 @@ export function ShopBrowser() {
 
         return Number(b.isFeatured) - Number(a.isFeatured);
       });
-  }, [category, query, sort]);
+  }, [dbProducts, category, query, sort]);
 
   return (
-    <section className="bg-carbon-900 py-8 md:py-12">
+    <section className="relative overflow-hidden py-8 md:py-12">
+      <div className="absolute inset-0 -z-10">
+        <Image src="/images/bg/featured_bg.png" alt="" fill className="object-cover object-center opacity-15" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80" />
+      </div>
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -125,37 +144,45 @@ export function ShopBrowser() {
           </div>
         </motion.div>
 
-        <div className="mt-8 flex items-center justify-between gap-4">
-          <p className="text-sm font-bold uppercase text-zinc-500">
-            {filteredProducts.length} Product
-            {filteredProducts.length === 1 ? "" : "s"}
-          </p>
-          <div className="h-px flex-1 bg-gradient-to-r from-white/10 via-electric-300/30 to-transparent" />
-        </div>
+        {loading ? (
+          <div className="mt-12 h-64 flex items-center justify-center border border-white/5 bg-zinc-900/10 backdrop-blur-sm rounded-2xl">
+            <Loader2 className="animate-spin text-electric-300 h-8 w-8" />
+          </div>
+        ) : (
+          <>
+            <div className="mt-8 flex items-center justify-between gap-4">
+              <p className="text-sm font-bold uppercase text-zinc-500">
+                {filteredProducts.length} Product
+                {filteredProducts.length === 1 ? "" : "s"}
+              </p>
+              <div className="h-px flex-1 bg-gradient-to-r from-white/10 via-electric-300/30 to-transparent" />
+            </div>
 
-        <motion.div
-          layout
-          className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredProducts.map((product, index) => (
-              <ProductCard key={product.id} product={product} index={index} />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+            <motion.div
+              layout
+              className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
+            >
+              <AnimatePresence mode="popLayout">
+                {filteredProducts.map((product, index) => (
+                  <ProductCard key={product.id} product={product} index={index} />
+                ))}
+              </AnimatePresence>
+            </motion.div>
 
-        {filteredProducts.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-8 border border-white/10 bg-white/[0.03] p-8 text-center"
-          >
-            <h2 className="text-4xl text-white">No products found.</h2>
-            <p className="mt-3 text-sm text-zinc-500">
-              Try a different search term or switch back to all products.
-            </p>
-          </motion.div>
-        ) : null}
+            {filteredProducts.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-8 border border-white/10 bg-white/[0.03] p-8 text-center"
+              >
+                <h2 className="text-4xl text-white">No products found.</h2>
+                <p className="mt-3 text-sm text-zinc-500">
+                  Try a different search term or switch back to all products.
+                </p>
+              </motion.div>
+            ) : null}
+          </>
+        )}
       </div>
     </section>
   );

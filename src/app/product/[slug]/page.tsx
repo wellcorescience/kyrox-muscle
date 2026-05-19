@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductDetailView } from "@/components/product/product-detail-view";
-import { products } from "@/constants/products";
+import { getDbProductBySlug, getDbProducts } from "@/app/actions/product";
 import { siteConfig } from "@/constants/site";
 
 type ProductPageProps = {
@@ -10,24 +10,19 @@ type ProductPageProps = {
   }>;
 };
 
-export function generateStaticParams() {
-  return products.map((product) => ({
-    slug: product.slug,
-  }));
-}
-
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = products.find((item) => item.slug === slug);
+  const res = await getDbProductBySlug(slug);
 
-  if (!product) {
+  if (!res.success || !res.product) {
     return {
       title: "Product Not Found",
     };
   }
 
+  const product = res.product;
   const title = `${product.name} | ${siteConfig.name}`;
   const description = product.description;
   const url = `${siteConfig.url}/product/${product.slug}`;
@@ -61,13 +56,18 @@ export async function generateMetadata({
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = products.find((item) => item.slug === slug);
+  const res = await getDbProductBySlug(slug);
 
-  if (!product) {
+  if (!res.success || !res.product) {
     notFound();
   }
 
-  const relatedProducts = products.filter((item) => item.id !== product.id);
+  const product = res.product;
+
+  // Load related products from database
+  const allRes = await getDbProducts();
+  const allProducts = allRes.products || [];
+  const relatedProducts = allProducts.filter((item) => item.id !== product.id);
 
   return (
     <ProductDetailView product={product} relatedProducts={relatedProducts} />

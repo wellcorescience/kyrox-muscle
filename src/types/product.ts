@@ -23,4 +23,6 @@ export type Product = {
   calories: number;
   releaseOrder: number;
   isFeatured?: boolean;
+  mrp: number;
+  availableFlavors: string[];
 };

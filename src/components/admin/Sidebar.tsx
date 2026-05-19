@@ -10,14 +10,18 @@ import {
   ShieldCheck, 
   Image as ImageIcon, 
   Settings, 
-  ChevronLeft, 
-  Menu 
+  ChevronLeft,
+  Menu,
+  ShoppingCart,
+  Star
 } from 'lucide-react';
 
 const navItems = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
   { name: 'Products', href: '/admin/products', icon: Package },
   { name: 'Authentication', href: '/admin/authentication', icon: ShieldCheck },
+  { name: 'Reviews', href: '/admin/reviews', icon: Star },
   { name: 'Media', href: '/admin/media', icon: ImageIcon },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];

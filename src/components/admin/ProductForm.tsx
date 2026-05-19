@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Save, X } from 'lucide-react';
+import { Save, X, Loader2 } from 'lucide-react';
 import { AdminProduct } from '@/types/admin';
-import { ImageUploader } from './ImageUploader';
+import { ImageUpload } from './ImageUpload';
+import { createOrUpdateDbProduct } from '@/app/actions/product';
 
 interface ProductFormProps {
   initialData?: AdminProduct;
@@ -14,6 +15,8 @@ interface ProductFormProps {
 export function ProductForm({ initialData, isEditing = false }: ProductFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
     slug: initialData?.slug || '',
@@ -22,11 +25,11 @@ export function ProductForm({ initialData, isEditing = false }: ProductFormProps
     flavor: initialData?.flavor || '',
     weight: initialData?.weight || '',
     stockQuantity: initialData?.stockQuantity || 0,
+    price: initialData?.mrp || (initialData as any)?.price || 0,
     status: initialData?.status || 'In Stock',
-    isFeatured: initialData?.isFeatured || false,
+    featured: initialData?.isFeatured || (initialData as any)?.featured || false,
     description: initialData?.description || '',
     images: initialData?.image ? [initialData.image, ...(initialData.gallery || [])] : [],
-    // Add other fields as necessary, simplifying for mock UI
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -46,12 +49,21 @@ export function ProductForm({ initialData, isEditing = false }: ProductFormProps
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMessage('');
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const res = await createOrUpdateDbProduct(initialData?.id || null, formData);
+      if (res.success) {
+        router.push('/admin/products');
+        router.refresh();
+      } else {
+        setErrorMessage(res.error || 'Failed to save product details.');
+      }
+    } catch (err: any) {
+      setErrorMessage(err.message || 'An error occurred.');
+    } finally {
       setLoading(false);
-      router.push('/admin/products');
-    }, 1000);
+    }
   };
 
   return (
@@ -62,7 +74,7 @@ export function ProductForm({ initialData, isEditing = false }: ProductFormProps
             {isEditing ? 'Edit Product' : 'Add New Product'}
           </h1>
           <p className="text-zinc-400">
-            {isEditing ? 'Update existing product details.' : 'Create a new product listing in your catalog.'}
+            {isEditing ? 'Update existing product details in your Supabase database.' : 'Create a new product listing in your dynamic catalog.'}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -79,11 +91,17 @@ export function ProductForm({ initialData, isEditing = false }: ProductFormProps
             disabled={loading}
             className="px-4 py-2 bg-white text-black font-medium rounded-xl hover:bg-zinc-200 transition-colors flex items-center gap-2 disabled:opacity-50"
           >
-            <Save size={18} />
+            {loading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
             <span>{loading ? 'Saving...' : 'Save Product'}</span>
           </button>
         </div>
       </div>
+
+      {errorMessage && (
+        <div className="border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400 rounded-xl">
+          {errorMessage}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
@@ -112,10 +130,26 @@ export function ProductForm({ initialData, isEditing = false }: ProductFormProps
                     name="slug"
                     value={formData.slug}
                     onChange={handleChange}
+                    required
                     className="w-full bg-zinc-900/50 border border-white/10 rounded-xl py-2.5 px-4 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
                     placeholder="kyrox-mass-gainer"
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-zinc-400 mb-1.5">Price (MRP in ₹)</label>
+                  <input 
+                    type="number" 
+                    name="price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-zinc-900/50 border border-white/10 rounded-xl py-2.5 px-4 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                    placeholder="e.g. 4000"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-zinc-400 mb-1.5">Category</label>
                   <select 
@@ -126,8 +160,19 @@ export function ProductForm({ initialData, isEditing = false }: ProductFormProps
                   >
                     <option value="mass-gainer">Mass Gainer</option>
                     <option value="whey-protein">Whey Protein</option>
-                    <option value="pre-workout">Pre-Workout</option>
                   </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-zinc-400 mb-1.5">Weight / Volume</label>
+                  <input 
+                    type="text" 
+                    name="weight"
+                    value={formData.weight}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-zinc-900/50 border border-white/10 rounded-xl py-2.5 px-4 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                    placeholder="e.g. 3 kg or 1 kg"
+                  />
                 </div>
               </div>
 
@@ -147,7 +192,7 @@ export function ProductForm({ initialData, isEditing = false }: ProductFormProps
 
           <div className="bg-zinc-900/40 border border-white/5 rounded-2xl p-6 space-y-6">
             <h2 className="text-xl font-semibold text-white">Media</h2>
-            <ImageUploader images={formData.images} onChange={handleImagesChange} />
+            <ImageUpload images={formData.images} onChange={handleImagesChange} />
           </div>
         </div>
 
@@ -187,8 +232,8 @@ export function ProductForm({ initialData, isEditing = false }: ProductFormProps
                   <p className="text-sm text-zinc-500">Show this product on the homepage</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" name="isFeatured" checked={formData.isFeatured} onChange={handleChange} className="sr-only peer" />
-                  <div className="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                  <input type="checkbox" name="featured" checked={formData.featured} onChange={handleChange} className="sr-only peer" />
+                  <div className="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                 </label>
               </div>
             </div>
@@ -207,18 +252,6 @@ export function ProductForm({ initialData, isEditing = false }: ProductFormProps
                   onChange={handleChange}
                   className="w-full bg-zinc-900/50 border border-white/10 rounded-xl py-2.5 px-4 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
                   placeholder="e.g. Double Rich Chocolate"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-1.5">Weight</label>
-                <input 
-                  type="text" 
-                  name="weight"
-                  value={formData.weight}
-                  onChange={handleChange}
-                  className="w-full bg-zinc-900/50 border border-white/10 rounded-xl py-2.5 px-4 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
-                  placeholder="e.g. 3 kg"
                 />
               </div>
             </div>

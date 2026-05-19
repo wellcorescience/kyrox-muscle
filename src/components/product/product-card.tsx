@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, MessageCircle, ShieldCheck, ShoppingCart, Sparkles } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import type { Product } from "@/types/product";
 import { cn } from "@/lib/utils";
 
@@ -29,7 +30,7 @@ const toneByCategory = {
 };
 
 export function ProductCard({ product, index = 0 }: ProductCardProps) {
-  const tone = toneByCategory[product.category];
+  const tone = toneByCategory[product.category as keyof typeof toneByCategory] || toneByCategory["mass-gainer"];
 
   return (
     <motion.article
@@ -43,7 +44,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         ease: [0.22, 1, 0.36, 1],
       }}
       whileHover={{ y: -8, scale: 1.015 }}
-      className="group relative overflow-hidden border border-white/10 bg-white/[0.035] p-4 shadow-2xl"
+      className="group relative overflow-hidden border border-white/10 bg-white/[0.035] shadow-2xl"
     >
       <div
         className={cn(
@@ -58,7 +59,8 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         )}
       />
 
-      <div className="relative grid min-h-[19rem] place-items-center overflow-hidden border border-white/10 bg-[radial-gradient(circle_at_50%_10%,rgba(255,255,255,0.08),transparent_16rem),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(0,0,0,0.25))]">
+      <div className="relative grid min-h-[19rem] place-items-center overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_50%_10%,rgba(255,255,255,0.08),transparent_16rem),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(0,0,0,0.25))] p-4">
+        {/* Category Badge */}
         <span
           className={cn(
             "absolute left-4 top-4 z-10 border bg-black/50 px-3 py-1.5 text-xs font-bold uppercase backdrop-blur-sm",
@@ -68,12 +70,16 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         >
           {product.categoryLabel}
         </span>
+        {/* Verified Badge */}
+        <span className="absolute right-4 top-4 z-10 flex items-center gap-1.5 border border-emerald-500/30 bg-black/50 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400 backdrop-blur-sm">
+          <ShieldCheck className="h-3 w-3" /> Verified
+        </span>
         <ProductImagePlaceholder product={product} />
       </div>
 
-      <div className="pt-6">
+      <div className="p-5">
         <div className="flex items-start justify-between gap-4">
-          <h2 className="min-h-[5rem] text-4xl leading-none text-white">
+          <h2 className="text-2xl font-bold leading-tight text-white">
             {product.name}
           </h2>
           <Sparkles
@@ -82,12 +88,22 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           />
         </div>
 
-        <p className="mt-3 min-h-16 text-sm leading-6 text-zinc-500">
-          {product.description}
-        </p>
+        {/* MRP */}
+        <div className="mt-3 flex items-center gap-3">
+          <span className="text-2xl font-black text-white">₹{product.mrp}</span>
+          <span className="text-xs font-bold uppercase text-zinc-500">MRP</span>
+        </div>
 
-        <ul className="mt-5 grid gap-2">
-          {product.highlights.map((highlight) => (
+        {/* Flavors */}
+        <div className="mt-3 flex items-center gap-2">
+          {product.availableFlavors?.map(f => (
+            <span key={f} className="text-[10px] font-bold uppercase tracking-wider border border-white/10 bg-white/5 px-2.5 py-1 text-zinc-400">{f}</span>
+          ))}
+        </div>
+
+        {/* Highlights */}
+        <ul className="mt-4 grid gap-2">
+          {product.highlights.slice(0, 3).map((highlight) => (
             <li
               key={highlight}
               className="flex items-center justify-between border-b border-white/10 py-2 text-sm text-zinc-300"
@@ -100,20 +116,56 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           ))}
         </ul>
 
-        <Link
-          href={`/product/${product.slug}`}
-          className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] text-white hover:border-metal-300/60 hover:bg-white/[0.07]"
-        >
-          View Product
-          <ArrowRight className="h-4 w-4" aria-hidden />
-        </Link>
+        {/* ACTION BUTTONS */}
+        <div className="mt-5 grid gap-2.5">
+          {/* WhatsApp Order */}
+          <a
+            href={`https://wa.me/917015553297?text=${encodeURIComponent(`Hi, I want to order ${product.name}.\nFlavor: \nQuantity: \n\nPlease help me with COD order.`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-12 w-full items-center justify-center gap-2 border border-[#25D366] bg-[#25D366]/10 text-sm font-bold uppercase tracking-wider text-[#25D366] hover:bg-[#25D366]/20 transition-colors"
+          >
+            <MessageCircle className="h-4 w-4" /> Order on WhatsApp
+          </a>
+          
+          {/* COD + View */}
+          <div className="grid grid-cols-2 gap-2.5">
+            <Link
+              href={`/checkout?product=${product.slug}`}
+              className="inline-flex min-h-11 items-center justify-center gap-2 border border-electric-400 bg-electric-500 text-xs font-bold uppercase tracking-wider text-black hover:bg-white transition-colors"
+            >
+              <ShoppingCart className="h-3.5 w-3.5" /> COD Order
+            </Link>
+            <Link
+              href={`/product/${product.slug}`}
+              className="inline-flex min-h-11 items-center justify-center gap-2 border border-white/15 bg-white/[0.04] text-xs font-bold uppercase tracking-wider text-white hover:border-electric-300/60 transition-colors"
+            >
+              View <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </div>
       </div>
     </motion.article>
   );
 }
 
 function ProductImagePlaceholder({ product }: { product: Product }) {
-  const tone = toneByCategory[product.category];
+  const tone = toneByCategory[product.category as keyof typeof toneByCategory] || toneByCategory["mass-gainer"];
+  const isReal = product.image && (product.image.startsWith("http") || product.image.startsWith("/") || product.image.includes("."));
+
+  if (isReal) {
+    return (
+      <div className="relative mx-auto aspect-[3/4] w-full max-w-[13.5rem] flex items-center justify-center">
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          sizes="(max-w-xs) 100vw, 220px"
+          className="object-contain transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+    );
+  }
 
   return (
     <div

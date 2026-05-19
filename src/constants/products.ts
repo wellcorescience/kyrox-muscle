@@ -40,6 +40,8 @@ export const products: Product[] = [
     calories: 423,
     releaseOrder: 2,
     isFeatured: true,
+    mrp: 4000,
+    availableFlavors: ["Kulfi", "Chocolate"],
   },
   {
     id: "kyrox-anabolic-mass-gainer",
@@ -75,6 +77,8 @@ export const products: Product[] = [
     calories: 390,
     releaseOrder: 3,
     isFeatured: true,
+    mrp: 4200,
+    availableFlavors: ["Kulfi", "Chocolate"],
   },
   {
     id: "kyrox-nitra-whey-protein",
@@ -115,6 +119,8 @@ export const products: Product[] = [
     calories: 145,
     releaseOrder: 1,
     isFeatured: true,
+    mrp: 8099,
+    availableFlavors: ["Kulfi", "Chocolate"],
   },
 ];
 
