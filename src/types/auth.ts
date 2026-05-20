@@ -1,6 +1,7 @@
 export interface AuthCodeRecord {
   id: string;
   product_id: string;
+  product_name?: string;
   code: string;
   batch_number: string | null;
   scan_count: number;

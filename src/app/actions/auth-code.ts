@@ -24,17 +24,16 @@ export async function getAuthCodeRecords() {
 
 export async function generateAuthCodesAction(
   productId: string,
+  productName: string,
   quantity: number,
   batchNumber: string | null
 ) {
   try {
-    const productsList = [
-      { id: 'prod_1', prefix: 'MG' },
-      { id: 'prod_4', prefix: 'AMG' },
-      { id: 'prod_5', prefix: 'NWP' },
-    ];
-    const selectedProduct = productsList.find((p) => p.id === productId);
-    const prefix = selectedProduct ? selectedProduct.prefix : 'GEN';
+    // Generate a dynamic prefix based on the product name, e.g. "MG" for Mass Gainer
+    const words = productName.split(' ').filter(w => w.trim().length > 0);
+    const prefix = words.length > 0 
+      ? words.map(w => w[0]).join('').substring(0, 3).toUpperCase() 
+      : 'GEN';
 
     const generateRandomCode = (pfx: string) => {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -49,6 +48,7 @@ export async function generateAuthCodesAction(
     for (let i = 0; i < quantity; i++) {
       newCodes.push({
         product_id: productId,
+        product_name: productName,
         code: generateRandomCode(prefix),
         batch_number: batchNumber || null,
         scan_count: 0,

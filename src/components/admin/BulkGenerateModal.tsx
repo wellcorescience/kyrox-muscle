@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Loader2, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthCodeRecord } from '@/types/auth';
 import { generateAuthCodesAction } from '@/app/actions/auth-code';
+import { getDbProducts } from '@/app/actions/product';
 
 interface BulkGenerateModalProps {
   isOpen: boolean;
@@ -12,29 +13,60 @@ interface BulkGenerateModalProps {
   onGenerated: (codes: AuthCodeRecord[]) => void;
 }
 
-const products = [
-  { id: 'prod_1', name: 'Mass Gainer', prefix: 'MG' },
-  { id: 'prod_4', name: 'Anabolic Mass Gainer', prefix: 'AMG' },
-  { id: 'prod_5', name: 'Nitra Whey Protein', prefix: 'NWP' },
-];
+interface ProductOption {
+  id: string;
+  name: string;
+}
 
 export function BulkGenerateModal({ isOpen, onClose, onGenerated }: BulkGenerateModalProps) {
   const [loading, setLoading] = useState(false);
+  const [fetchingProducts, setFetchingProducts] = useState(false);
+  const [products, setProducts] = useState<ProductOption[]>([]);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    productId: products[0].id,
+    productId: '',
     quantity: 10,
     batchNumber: '',
   });
 
+  useEffect(() => {
+    if (isOpen) {
+      setFetchingProducts(true);
+      getDbProducts().then((res) => {
+        if (res.success && res.products) {
+          const loadedProducts = res.products.map((p: any) => ({
+            id: p.id,
+            name: p.name,
+          }));
+          setProducts(loadedProducts);
+          if (loadedProducts.length > 0) {
+            setFormData(prev => ({ ...prev, productId: loadedProducts[0].id }));
+          }
+        } else {
+          setErrorMsg('Failed to load products');
+        }
+        setFetchingProducts(false);
+      });
+    }
+  }, [isOpen]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.productId) {
+      setErrorMsg('Please select a product first.');
+      return;
+    }
+
     setLoading(true);
     setErrorMsg(null);
+
+    const selectedProduct = products.find(p => p.id === formData.productId);
+    const productName = selectedProduct ? selectedProduct.name : 'Unknown Product';
 
     try {
       const res = await generateAuthCodesAction(
         formData.productId,
+        productName,
         formData.quantity,
         formData.batchNumber || null
       );
@@ -99,11 +131,18 @@ export function BulkGenerateModal({ isOpen, onClose, onGenerated }: BulkGenerate
                   <select
                     value={formData.productId}
                     onChange={(e) => setFormData({ ...formData, productId: e.target.value })}
-                    className="w-full bg-zinc-900/50 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500 transition-all appearance-none"
+                    disabled={fetchingProducts}
+                    className="w-full bg-zinc-900/50 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500 transition-all appearance-none disabled:opacity-50"
                   >
-                    {products.map(p => (
-                      <option key={p.id} value={p.id} className="bg-zinc-900">{p.name}</option>
-                    ))}
+                    {fetchingProducts ? (
+                      <option value="">Loading products...</option>
+                    ) : products.length === 0 ? (
+                      <option value="">No products found</option>
+                    ) : (
+                      products.map(p => (
+                        <option key={p.id} value={p.id} className="bg-zinc-900">{p.name}</option>
+                      ))
+                    )}
                   </select>
                 </div>
 
