@@ -148,3 +148,22 @@ export async function verifyAuthCodeAction(codeToVerify: string) {
     return { success: false, error: err.message || 'Failed to verify auth code' };
   }
 }
+
+export async function deleteAuthCodeAction(id: string) {
+  try {
+    const { error } = await supabase
+      .from('auth_codes')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Supabase error deleting auth code:', error);
+      throw new Error(error.message);
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error('Error deleting auth code:', err);
+    return { success: false, error: err.message || 'Failed to delete auth code' };
+  }
+}

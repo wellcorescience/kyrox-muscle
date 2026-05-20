@@ -16,7 +16,13 @@ import { mockProducts } from '@/lib/mock-data';
 import { AuthCodeRecord } from '@/types/auth';
 import { BulkGenerateModal } from '@/components/admin/BulkGenerateModal';
 import { exportCodesToExcel } from '@/lib/excel-export';
-import { getAuthCodeRecords, toggleAuthCodeStatusAction } from '@/app/actions/auth-code';
+import { getAuthCodeRecords, toggleAuthCodeStatusAction, deleteAuthCodeAction } from '@/app/actions/auth-code';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem
+} from '@/components/ui/dropdown-menu';
 
 export default function AdminAuthenticationPage() {
   const [records, setRecords] = useState<AuthCodeRecord[]>([]);
@@ -81,6 +87,21 @@ export default function AdminAuthenticationPage() {
       setRecords(records.map(r => 
         r.id === id ? { ...r, is_active: record.is_active } : r
       ));
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this code?')) return;
+    
+    // Optimistic UI update
+    const previousRecords = [...records];
+    setRecords(records.filter(r => r.id !== id));
+
+    const res = await deleteAuthCodeAction(id);
+    if (!res.success) {
+      alert(res.error || 'Failed to delete code.');
+      // Rollback on error
+      setRecords(previousRecords);
     }
   };
 
@@ -186,7 +207,7 @@ export default function AdminAuthenticationPage() {
                             <span className="font-mono text-sm tracking-widest text-white">{record.code}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-sm text-zinc-300">{getProductName(record.product_id)}</td>
+                        <td className="px-6 py-4 text-sm text-zinc-300">{record.product_name || 'Unknown Product'}</td>
                         <td className="px-6 py-4 text-xs font-mono text-zinc-500">{record.batch_number || '---'}</td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
@@ -218,9 +239,30 @@ export default function AdminAuthenticationPage() {
                             <button className="p-2 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors">
                               <Eye size={16} />
                             </button>
-                            <button className="p-2 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors">
-                              <MoreVertical size={16} />
-                            </button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <button className="p-2 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors">
+                                  <MoreVertical size={16} />
+                                </button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent>
+                                <DropdownMenuItem className="text-zinc-300 hover:bg-white/5 hover:text-white">
+                                  View
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  onClick={() => toggleStatus(record.id)}
+                                  className="text-zinc-300 hover:bg-white/5 hover:text-white"
+                                >
+                                  {record.is_active ? 'Disable' : 'Enable'}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  onClick={() => handleDelete(record.id)}
+                                  className="text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                                >
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
                         </td>
                       </motion.tr>
