@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, ShieldCheck, X, ShoppingCart } from "lucide-react";
 import { siteConfig } from "@/constants/site";
@@ -53,37 +54,17 @@ export function Navbar() {
       <nav className="container flex h-20 items-center justify-between">
         <Link
           href="/"
-          className="group flex items-center gap-2"
+          className="group flex items-center"
           aria-label="Kyrox Muscle home"
         >
-          <span
-            className={cn(
-              "grid h-11 w-11 place-items-center border text-xl font-semibold shadow-[inset_0_1px_4px_rgba(185,148,28,0.12)] transition-all",
-              isTransparent
-                ? "border-white/20 bg-white/10 text-white shadow-[inset_0_1px_4px_rgba(255,255,255,0.12)]"
-                : "border-gold-300 bg-gold-50 text-gold-500"
-            )}
-          >
-            K
-          </span>
-          <span className="leading-none">
-            <span
-              className={cn(
-                "block font-heading text-3xl transition-colors",
-                isTransparent ? "text-white" : "text-[#1a1a1a]"
-              )}
-            >
-              Kyrox
-            </span>
-            <span
-              className={cn(
-                "block text-[0.68rem] font-semibold uppercase tracking-[0.28em] transition-colors",
-                isTransparent ? "text-white/80" : "text-[#A89340]"
-              )}
-            >
-              Muscle
-            </span>
-          </span>
+          <Image
+            src={isTransparent ? "/logo-dark.png" : "/logo-light.png"}
+            alt="Kyrox Muscle Logo"
+            width={180}
+            height={48}
+            priority
+            className="h-10 w-auto object-contain transition-all duration-300 md:h-12"
+          />
         </Link>
 
         <div className="hidden items-center gap-1 lg:flex">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Dumbbell, ShieldCheck, Truck, Droplet, Headset } from "lucide-react";
 import { siteConfig } from "@/constants/site";
 
@@ -9,13 +10,14 @@ export function Footer() {
     <footer className="surface-line border-t border-ivory-300 bg-ivory-50 pt-16">
       <div className="container px-4 max-w-7xl mx-auto">
         <div className="mb-16">
-          <Link href="/" className="inline-flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center border border-gold-300 bg-gold-50 text-gold-500 shadow-[inset_0_1px_4px_rgba(185,148,28,0.12)]">
-              <Dumbbell className="h-5 w-5" aria-hidden />
-            </span>
-            <span className="font-heading text-3xl font-black tracking-normal leading-[1.1] text-foreground uppercase">
-              Kyrox Muscle
-            </span>
+          <Link href="/" className="inline-flex items-center">
+            <Image
+              src="/logo-light.png"
+              alt="Kyrox Muscle Logo"
+              width={180}
+              height={48}
+              className="h-10 w-auto object-contain"
+            />
           </Link>
           <p className="mt-4 max-w-md text-sm leading-6 text-muted">
             Premium supplement engineering for verified performance, disciplined training, and massive gains.
