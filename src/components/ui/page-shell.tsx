@@ -20,7 +20,7 @@ export function PageShell({
           <p className="text-sm font-bold uppercase tracking-[0.22em] text-metal-200">
             {eyebrow}
           </p>
-          <h1 className="mt-4 text-balance text-6xl leading-none text-white md:text-7xl">
+          <h1 className="mt-4 text-balance text-4xl md:text-6xl font-black uppercase text-white tracking-normal leading-[1.1]">
             {title}
           </h1>
           <p className="mt-5 text-base leading-8 text-zinc-400">

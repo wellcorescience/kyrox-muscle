@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 
 export async function login(formData: FormData) {
@@ -20,8 +21,17 @@ export async function login(formData: FormData) {
     return { error: error.message }
   }
 
+  const cookieStore = await cookies()
+  cookieStore.set('kyrox-admin-session', 'active', {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: 60 * 60 * 8, // 8 hours
+  })
+
   revalidatePath('/admin')
-  redirect('/admin')
+  redirect('/admin/dashboard')
 }
 
 export async function logout() {
@@ -32,6 +42,9 @@ export async function logout() {
   if (error) {
     return { error: error.message }
   }
+
+  const cookieStore = await cookies()
+  cookieStore.delete('kyrox-admin-session')
 
   revalidatePath('/admin')
   redirect('/admin/login')

@@ -18,7 +18,7 @@ export default async function VerifyCodePage({
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-white/[0.02] blur-[120px] rounded-full pointer-events-none" />
       
       <div className="w-full max-w-4xl relative z-10 text-center mb-12">
-        <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tighter mb-4 leading-tight">
+        <h1 className="text-3xl md:text-5xl font-bold text-white tracking-normal mb-4 leading-[1.1]">
           AUTOMATIC <br />
           <span className="text-zinc-500">VERIFICATION</span>
         </h1>

@@ -28,7 +28,7 @@ export default function RefundPolicyPage() {
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">2. Damaged or Incorrect Items</h2>
             <p>
-              If you receive a defective, damaged, or incorrect item, please contact our support team via WhatsApp immediately with an unboxing video and clear photos of the issue. We will arrange a free replacement or initiate a full refund upon verification of the claim.
+              If you receive a defective, damaged, or incorrect item, please contact our support team immediately with an unboxing video and clear photos of the issue. We will arrange a free replacement or initiate a full refund upon verification of the claim.
             </p>
           </section>
 
@@ -42,7 +42,7 @@ export default function RefundPolicyPage() {
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">4. Order Cancellations</h2>
             <p>
-              Orders can be cancelled before they are dispatched. Once an order has been handed over to our courier partners (Shipped status), cancellation requests will no longer be accepted. To cancel an order, please contact our WhatsApp support team immediately.
+              Orders can be cancelled before they are dispatched. Once an order has been handed over to our courier partners (Shipped status), cancellation requests will no longer be accepted. To cancel an order, please contact our support team immediately.
             </p>
           </section>
         </div>

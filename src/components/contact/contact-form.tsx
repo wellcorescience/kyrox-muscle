@@ -27,8 +27,8 @@ export function ContactForm() {
   };
 
   return (
-    <div className="border border-white/10 bg-black/40 backdrop-blur-xl p-8 shadow-2xl relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+    <div className="border border-ivory-200 bg-white p-8 shadow-sm rounded-2xl relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-ivory-50/50 to-transparent pointer-events-none" />
 
       <AnimatePresence mode="wait">
         {!success ? (
@@ -38,11 +38,11 @@ export function ContactForm() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onSubmit={handleSubmit}
-            className="space-y-6 relative z-10"
+            className="space-y-8 relative z-10"
           >
             <div className="grid gap-6 sm:grid-cols-2">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase ml-1">
+              <div className="flex flex-col">
+                <label className="text-xs font-bold tracking-[0.2em] text-neutral-500 uppercase ml-1 block mb-2">
                   Your Name
                 </label>
                 <input
@@ -51,12 +51,12 @@ export function ContactForm() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Enter full name"
-                  className="w-full bg-black/50 border border-white/10 py-4 px-5 text-sm text-white placeholder:text-zinc-700 focus:outline-none focus:border-electric-300 transition-colors"
+                  className="w-full bg-ivory-50 border border-ivory-200 py-5 px-6 text-sm text-[#1a1a1a] placeholder:text-muted/60 focus:outline-none focus:border-gold-400 focus:bg-white transition-colors rounded-xl shadow-sm"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase ml-1">
+              <div className="flex flex-col">
+                <label className="text-xs font-bold tracking-[0.2em] text-neutral-500 uppercase ml-1 block mb-2">
                   Phone Number
                 </label>
                 <input
@@ -65,13 +65,13 @@ export function ContactForm() {
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="Enter phone number"
-                  className="w-full bg-black/50 border border-white/10 py-4 px-5 text-sm text-white placeholder:text-zinc-700 focus:outline-none focus:border-electric-300 transition-colors"
+                  className="w-full bg-ivory-50 border border-ivory-200 py-5 px-6 text-sm text-[#1a1a1a] placeholder:text-muted/60 focus:outline-none focus:border-gold-400 focus:bg-white transition-colors rounded-xl shadow-sm"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase ml-1">
+            <div className="flex flex-col">
+              <label className="text-xs font-bold tracking-[0.2em] text-neutral-500 uppercase ml-1 block mb-2">
                 Subject
               </label>
               <input
@@ -80,28 +80,28 @@ export function ContactForm() {
                 value={formData.subject}
                 onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                 placeholder="How can we help you?"
-                className="w-full bg-black/50 border border-white/10 py-4 px-5 text-sm text-white placeholder:text-zinc-700 focus:outline-none focus:border-electric-300 transition-colors"
+                className="w-full bg-ivory-50 border border-ivory-200 py-5 px-6 text-sm text-[#1a1a1a] placeholder:text-muted/60 focus:outline-none focus:border-gold-400 focus:bg-white transition-colors rounded-xl shadow-sm"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase ml-1">
+            <div className="flex flex-col">
+              <label className="text-xs font-bold tracking-[0.2em] text-neutral-500 uppercase ml-1 block mb-2">
                 Message Description
               </label>
               <textarea
                 required
-                rows={5}
+                rows={7}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 placeholder="Describe your issue or request in detail..."
-                className="w-full bg-black/50 border border-white/10 py-4 px-5 text-sm text-white placeholder:text-zinc-700 focus:outline-none focus:border-electric-300 transition-colors resize-none"
+                className="w-full bg-ivory-50 border border-ivory-200 py-5 px-6 text-sm text-[#1a1a1a] placeholder:text-muted/60 focus:outline-none focus:border-gold-400 focus:bg-white transition-colors resize-none rounded-xl min-h-[160px] shadow-sm"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-electric-500 text-black font-bold text-sm uppercase tracking-widest hover:bg-white transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+              className="w-full py-5 bg-[#A89340] hover:bg-gold-500 text-white font-bold text-sm uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 rounded-xl shadow-glow btn-primary hover:-translate-y-0.5 active:translate-y-0 mt-2"
             >
               {loading ? (
                 <>
@@ -123,16 +123,16 @@ export function ContactForm() {
             animate={{ opacity: 1, scale: 1 }}
             className="text-center py-12 relative z-10 flex flex-col items-center justify-center"
           >
-            <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6">
-              <CheckCircle2 className="text-emerald-500 h-10 w-10" />
+            <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-6 shadow-sm border border-emerald-500/20">
+              <CheckCircle2 className="text-emerald-600 h-10 w-10" />
             </div>
-            <h3 className="text-3xl font-black uppercase text-white mb-2">Message Sent</h3>
-            <p className="text-zinc-400 max-w-sm mx-auto text-sm leading-relaxed mb-6">
+            <h3 className="text-3xl font-black uppercase text-foreground mb-2">Message Sent</h3>
+            <p className="text-muted max-w-sm mx-auto text-sm leading-relaxed mb-6">
               Thank you for contacting Kyrox Muscle. We have received your query and will respond shortly.
             </p>
             <button
               onClick={() => setSuccess(false)}
-              className="px-6 py-3 border border-white/15 bg-white/[0.04] text-xs font-bold uppercase tracking-wider text-white hover:border-electric-300/60 transition-colors"
+              className="px-6 py-3 border border-ivory-300 bg-white text-xs font-bold uppercase tracking-wider text-foreground hover:border-gold-300 hover:bg-ivory-50 transition-colors rounded-xl shadow-sm btn-primary"
             >
               Send Another Message
             </button>

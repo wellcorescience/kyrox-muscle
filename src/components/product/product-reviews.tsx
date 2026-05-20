@@ -74,12 +74,12 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
   };
 
   return (
-    <section className="border-b border-white/10 bg-[#0A0A0A] py-16 md:py-24">
+    <section className="border-b border-ivory-200 bg-ivory-50 py-10 md:py-14">
       <div className="container max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <p className="text-sm font-bold uppercase text-electric-300">Customer Reviews</p>
-            <h2 className="mt-3 text-balance text-4xl leading-none text-white md:text-5xl">
+            <p className="text-sm font-bold uppercase text-gold-500">Customer Reviews</p>
+            <h2 className="mt-3 text-balance text-3xl leading-[1.1] text-foreground md:text-4xl lg:text-5xl font-black tracking-normal uppercase">
               Real Athlete Feedback
             </h2>
           </div>
@@ -93,16 +93,16 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
                       key={star} 
                       size={20} 
                       fill={star <= Number(averageRating) ? 'currentColor' : 'transparent'} 
-                      className={star <= Number(averageRating) ? 'text-yellow-500' : 'text-zinc-700'} 
+                      className={star <= Number(averageRating) ? 'text-yellow-500' : 'text-ivory-300'} 
                     />
                   ))}
                 </div>
-                <span className="text-2xl font-bold text-white ml-2">{averageRating}</span>
+                <span className="text-2xl font-bold text-foreground ml-2">{averageRating}</span>
               </div>
-              <p className="text-sm text-zinc-400">Based on {reviews.length} verified review{reviews.length === 1 ? '' : 's'}</p>
+              <p className="text-sm text-muted">Based on {reviews.length} verified review{reviews.length === 1 ? '' : 's'}</p>
               <button 
                 onClick={() => setIsModalOpen(true)}
-                className="mt-4 text-xs font-bold uppercase tracking-wider text-electric-300 hover:text-white transition-colors"
+                className="mt-4 text-xs font-bold uppercase tracking-wider text-gold-500 hover:text-gold-600 transition-colors"
               >
                 Write a Review
               </button>
@@ -112,16 +112,16 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
 
         {loading ? (
           <div className="py-20 flex justify-center">
-            <Loader2 className="animate-spin text-zinc-500" size={32} />
+            <Loader2 className="animate-spin text-muted" size={32} />
           </div>
         ) : reviews.length === 0 ? (
-          <div className="py-16 text-center border border-white/10 bg-white/[0.02]">
-            <MessageSquare className="mx-auto text-zinc-600 mb-4" size={48} />
-            <h3 className="text-xl font-bold text-white mb-2">No reviews yet</h3>
-            <p className="text-zinc-400 mb-6">Be the first to review this product and share your experience.</p>
+          <div className="py-16 text-center border border-ivory-200 bg-white rounded-2xl shadow-sm">
+            <MessageSquare className="mx-auto text-ivory-400 mb-4" size={48} />
+            <h3 className="text-xl font-bold text-foreground mb-2">No reviews yet</h3>
+            <p className="text-muted mb-6">Be the first to review this product and share your experience.</p>
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex min-h-12 items-center justify-center gap-2 border border-metal-200 bg-metal-200 px-6 py-2 text-sm font-bold uppercase tracking-[0.16em] text-black shadow-glow hover:bg-white transition-colors"
+              className="inline-flex min-h-12 items-center justify-center gap-2 border border-gold-300 bg-gold-50 px-6 py-2 text-sm font-bold uppercase tracking-[0.16em] text-gold-500 shadow-sm hover:bg-gold-400 hover:border-gold-400 hover:text-white transition-colors btn-primary"
             >
               Write a Review
             </button>
@@ -134,7 +134,7 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="p-6 border border-white/10 bg-white/[0.035] shadow-2xl"
+                className="p-6 border border-ivory-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 rounded-xl"
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex text-yellow-500">
@@ -143,20 +143,20 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
                         key={star} 
                         size={14} 
                         fill={star <= review.rating ? 'currentColor' : 'transparent'} 
-                        className={star <= review.rating ? 'text-yellow-500' : 'text-zinc-700'} 
+                        className={star <= review.rating ? 'text-yellow-500' : 'text-ivory-300'} 
                       />
                     ))}
                   </div>
-                  <span className="text-xs text-zinc-500">{new Date(review.created_at).toLocaleDateString()}</span>
+                  <span className="text-xs text-muted">{new Date(review.created_at).toLocaleDateString()}</span>
                 </div>
-                <p className="text-zinc-300 text-sm leading-relaxed mb-6">&quot;{review.review_text}&quot;</p>
+                <p className="text-foreground/80 text-sm leading-relaxed mb-6">&quot;{review.review_text}&quot;</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-white shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-ivory-200 flex items-center justify-center text-xs font-bold text-foreground shrink-0 border border-ivory-300">
                     {review.customer_name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-white">{review.customer_name}</p>
-                    {review.city && <p className="text-xs text-zinc-500">{review.city}</p>}
+                    <p className="text-sm font-bold text-foreground">{review.customer_name}</p>
+                    {review.city && <p className="text-xs text-muted">{review.city}</p>}
                   </div>
                 </div>
               </motion.div>
@@ -179,13 +179,13 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="relative w-full max-w-lg bg-[#0A0A0A] border border-white/10 p-6 md:p-8 shadow-2xl z-10"
+                className="relative w-full max-w-lg bg-white border border-ivory-200 p-6 md:p-8 shadow-2xl z-10 rounded-2xl"
               >
                 {!submitSuccess && (
                   <button 
                     onClick={() => setIsModalOpen(false)}
                     disabled={isSubmitting}
-                    className="absolute top-4 right-4 p-2 text-zinc-500 hover:text-white transition-colors disabled:opacity-50"
+                    className="absolute top-4 right-4 p-2 text-muted hover:text-foreground transition-colors disabled:opacity-50"
                   >
                     <X size={20} />
                   </button>
@@ -201,15 +201,15 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
                     >
                       <CheckCircle2 size={32} />
                     </motion.div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Review Submitted Successfully</h3>
-                    <p className="text-zinc-400 text-sm">Thank you for your feedback! It will appear on the site after admin approval.</p>
+                    <h3 className="text-2xl font-bold text-foreground mb-2">Review Submitted Successfully</h3>
+                    <p className="text-muted text-sm">Thank you for your feedback! It will appear on the site after admin approval.</p>
                   </div>
                 ) : (
                   <>
-                    <h3 className="text-2xl font-bold uppercase tracking-wider text-white mb-6">Write a Review</h3>
+                    <h3 className="text-2xl font-bold uppercase tracking-wider text-foreground mb-6">Write a Review</h3>
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div>
-                        <label className="block text-xs font-bold uppercase text-zinc-500 mb-2">Rating</label>
+                        <label className="block text-xs font-bold uppercase text-muted mb-2">Rating</label>
                         <div className="flex gap-2">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <button
@@ -221,7 +221,7 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
                               <Star 
                                 size={28} 
                                 fill={star <= formData.rating ? 'currentColor' : 'transparent'} 
-                                className={`${star <= formData.rating ? 'text-yellow-500' : 'text-zinc-700 hover:text-zinc-500'} transition-colors`}
+                                className={`${star <= formData.rating ? 'text-yellow-500' : 'text-ivory-300 hover:text-ivory-400'} transition-colors`}
                               />
                             </button>
                           ))}
@@ -230,36 +230,36 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-bold uppercase text-zinc-500 mb-2">Name *</label>
+                          <label className="block text-xs font-bold uppercase text-muted mb-2">Name *</label>
                           <input 
                             type="text" 
                             required
                             value={formData.name}
                             onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                            className="w-full bg-black border border-white/20 focus:border-electric-300 text-white px-4 py-3 outline-none transition-colors" 
+                            className="w-full bg-ivory-50 border border-ivory-200 focus:border-gold-300 focus:bg-white text-foreground px-4 py-3 outline-none transition-colors" 
                             placeholder="Your name" 
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-bold uppercase text-zinc-500 mb-2">City (Optional)</label>
+                          <label className="block text-xs font-bold uppercase text-muted mb-2">City (Optional)</label>
                           <input 
                             type="text" 
                             value={formData.city}
                             onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
-                            className="w-full bg-black border border-white/20 focus:border-electric-300 text-white px-4 py-3 outline-none transition-colors" 
+                            className="w-full bg-ivory-50 border border-ivory-200 focus:border-gold-300 focus:bg-white text-foreground px-4 py-3 outline-none transition-colors" 
                             placeholder="Your city" 
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold uppercase text-zinc-500 mb-2">Review *</label>
+                        <label className="block text-xs font-bold uppercase text-muted mb-2">Review *</label>
                         <textarea 
                           required
                           value={formData.review}
                           onChange={(e) => setFormData(prev => ({ ...prev, review: e.target.value }))}
                           rows={4}
-                          className="w-full bg-black border border-white/20 focus:border-electric-300 text-white px-4 py-3 outline-none transition-colors resize-none" 
+                          className="w-full bg-ivory-50 border border-ivory-200 focus:border-gold-300 focus:bg-white text-foreground px-4 py-3 outline-none transition-colors resize-none" 
                           placeholder="Tell us what you think..." 
                         />
                       </div>
@@ -273,7 +273,7 @@ export function ProductReviews({ productId }: ProductReviewsProps) {
                       <button 
                         type="submit" 
                         disabled={isSubmitting}
-                        className="w-full inline-flex min-h-12 items-center justify-center gap-2 border border-metal-200 bg-metal-200 px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] text-black shadow-glow hover:bg-white transition-colors disabled:opacity-50"
+                        className="w-full inline-flex min-h-12 items-center justify-center gap-2 border border-gold-400 bg-gold-400 px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] text-white shadow-glow hover:bg-gold-500 hover:border-gold-500 transition-colors disabled:opacity-50 btn-primary"
                       >
                         {isSubmitting ? <Loader2 className="animate-spin h-5 w-5" /> : 'SUBMIT REVIEW'}
                       </button>

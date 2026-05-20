@@ -31,25 +31,29 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    request.nextUrl.pathname.startsWith('/admin') &&
-    request.nextUrl.pathname !== '/admin/login'
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone()
-    url.pathname = '/admin/login'
-    return NextResponse.redirect(url)
-  }
+  const adminCookie = request.cookies.get('kyrox-admin-session')?.value;
+  const isTargetingAdmin = request.nextUrl.pathname.startsWith('/admin');
+  const isLoginPage = request.nextUrl.pathname === '/admin/login';
 
-  // Also protect the login page if they are already logged in
-  if (
-    user &&
-    request.nextUrl.pathname === '/admin/login'
-  ) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/admin'
-    return NextResponse.redirect(url)
+  if (isTargetingAdmin) {
+    if (!adminCookie && !isLoginPage) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/admin/login'
+      url.searchParams.set('message', 'Admin authentication required')
+      return NextResponse.redirect(url)
+    }
+
+    if (adminCookie && isLoginPage) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/admin/dashboard'
+      return NextResponse.redirect(url)
+    }
+
+    if (adminCookie && request.nextUrl.pathname === '/admin') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/admin/dashboard'
+      return NextResponse.redirect(url)
+    }
   }
 
   return supabaseResponse

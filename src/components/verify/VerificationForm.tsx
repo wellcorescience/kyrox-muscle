@@ -65,9 +65,9 @@ export function VerificationForm({ initialCode = '' }: VerificationFormProps) {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-zinc-900/40 border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl backdrop-blur-xl relative overflow-hidden"
+        className="bg-white border border-ivory-200 rounded-3xl p-8 md:p-12 shadow-premium backdrop-blur-xl relative overflow-hidden"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-ivory-50/50 to-transparent pointer-events-none" />
         
         <form
           onSubmit={(e) => {
@@ -77,7 +77,7 @@ export function VerificationForm({ initialCode = '' }: VerificationFormProps) {
           className="space-y-6 relative z-10"
         >
           <div className="space-y-2">
-            <label className="text-xs font-bold tracking-[0.2em] text-zinc-500 uppercase ml-1">
+            <label className="text-xs font-bold tracking-[0.2em] text-muted uppercase ml-1">
               Authentication Code
             </label>
             <div className="relative group">
@@ -86,16 +86,16 @@ export function VerificationForm({ initialCode = '' }: VerificationFormProps) {
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                 placeholder="ENTER AUTHENTICATION CODE"
-                className="w-full bg-black/40 border border-white/10 rounded-2xl py-5 px-6 text-xl md:text-2xl font-mono text-white tracking-[0.1em] placeholder:text-zinc-700 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all text-center"
+                className="w-full bg-ivory-50 border border-[#e8e5de] rounded-xl h-[56px] px-6 text-xl md:text-2xl font-mono text-[#1a1a1a] tracking-[0.1em] placeholder:text-muted focus:outline-none focus:border-[#A89340] focus:bg-white transition-all text-center shadow-inner"
               />
-              <div className="absolute inset-0 rounded-2xl bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              <div className="absolute inset-0 rounded-2xl bg-gold-400/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
             </div>
           </div>
 
           <button
             type="submit"
             disabled={loading || !code.trim()}
-            className="w-full py-5 bg-white text-black font-bold text-lg rounded-2xl hover:bg-zinc-200 disabled:opacity-50 disabled:hover:bg-white transition-all flex items-center justify-center gap-3 relative overflow-hidden group shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+            className="w-full h-[56px] bg-[#A89340] hover:bg-gold-500 text-white font-bold text-sm uppercase tracking-[0.2em] rounded-xl transition-all duration-200 flex items-center justify-center gap-3 relative overflow-hidden group active:scale-[0.97] btn-primary"
           >
             {loading ? (
               <Loader2 className="animate-spin" size={24} />
@@ -108,7 +108,7 @@ export function VerificationForm({ initialCode = '' }: VerificationFormProps) {
             
             {/* Glossy overlay animation */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full"
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full"
               animate={loading ? { x: ['100%', '-100%'] } : {}}
               transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
             />
@@ -127,7 +127,7 @@ export function VerificationForm({ initialCode = '' }: VerificationFormProps) {
         </AnimatePresence>
       </motion.div>
       
-      <p className="text-center text-zinc-500 text-sm mt-8 px-4 leading-relaxed">
+      <p className="text-center text-muted text-sm mt-8 px-4 leading-relaxed">
         Your safety is our priority. Always verify your Kyrox Muscle products to ensure you are consuming genuine, lab-tested supplements.
       </p>
     </div>

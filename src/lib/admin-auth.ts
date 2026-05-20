@@ -44,7 +44,7 @@ export async function loginAdmin(formData: FormData) {
     maxAge: 60 * 60 * 8,
   });
 
-  redirect("/admin");
+  redirect("/admin/dashboard");
 }
 
 export async function logoutAdmin() {

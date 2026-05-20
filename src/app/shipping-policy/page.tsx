@@ -42,7 +42,7 @@ export default function ShippingPolicyPage() {
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">3. Order Tracking</h2>
             <p>
-              Once your order has been dispatched, you will receive a tracking link via email and WhatsApp. You can also track the status of your shipment directly through our WhatsApp support bot or by contacting our customer service team.
+              Once your order has been dispatched, you will receive a tracking link via email and SMS. You can also track the status of your shipment by contacting our customer support team.
             </p>
           </section>
 

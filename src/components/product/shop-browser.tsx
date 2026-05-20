@@ -64,37 +64,37 @@ export function ShopBrowser() {
   }, [dbProducts, category, query, sort]);
 
   return (
-    <section className="relative overflow-hidden py-8 md:py-12">
+    <section className="relative overflow-hidden py-8 md:py-12 bg-[#F8F4EE]">
       <div className="absolute inset-0 -z-10">
-        <Image src="/images/bg/featured_bg.png" alt="" fill className="object-cover object-center opacity-15" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80" />
+        <Image src="/images/bg/featured_bg.png" alt="" fill className="object-cover object-center opacity-[0.03]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F8F4EE] via-white/80 to-[#F8F4EE]" />
       </div>
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="border border-white/10 bg-white/[0.03] p-4 md:p-5"
+          className="border border-ivory-200 bg-white p-4 md:p-5 shadow-sm rounded-2xl"
         >
           <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
             <label className="relative block">
               <span className="sr-only">Search by product name</span>
               <Search
-                className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-electric-300"
+                className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gold-500"
                 aria-hidden
               />
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search by product name"
-                className="h-14 w-full border border-white/10 bg-black/70 pl-12 pr-4 text-sm font-semibold text-white outline-none placeholder:text-zinc-600 focus:border-electric-300/70"
+                className="h-14 w-full border border-ivory-200 bg-ivory-50 pl-12 pr-4 text-sm font-semibold text-foreground outline-none placeholder:text-muted focus:border-gold-300 focus:bg-white rounded-xl transition-colors"
               />
             </label>
 
             <label className="relative block lg:w-64">
               <span className="sr-only">Sort products</span>
               <SlidersHorizontal
-                className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-metal-200"
+                className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gold-400"
                 aria-hidden
               />
               <select
@@ -102,7 +102,7 @@ export function ShopBrowser() {
                 onChange={(event) =>
                   setSort(event.target.value as ProductSortOption)
                 }
-                className="h-14 w-full appearance-none border border-white/10 bg-black/70 pl-12 pr-10 text-sm font-bold uppercase text-white outline-none focus:border-metal-200/70"
+                className="h-14 w-full appearance-none border border-ivory-200 bg-ivory-50 pl-12 pr-10 text-sm font-bold uppercase text-foreground outline-none focus:border-gold-300 focus:bg-white rounded-xl transition-colors"
               >
                 {productSortOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -110,7 +110,7 @@ export function ShopBrowser() {
                   </option>
                 ))}
               </select>
-              <span className="pointer-events-none absolute right-4 top-1/2 h-2 w-2 -translate-y-1/2 rotate-45 border-b border-r border-zinc-400" />
+              <span className="pointer-events-none absolute right-4 top-1/2 h-2 w-2 -translate-y-1/2 rotate-45 border-b border-r border-muted" />
             </label>
           </div>
 
@@ -124,20 +124,20 @@ export function ShopBrowser() {
                   type="button"
                   onClick={() => setCategory(item.value)}
                   className={cn(
-                    "relative min-h-11 shrink-0 border px-4 text-sm font-bold uppercase text-zinc-300",
+                    "relative min-h-11 shrink-0 border px-5 py-2 text-[11px] tracking-[0.1em] font-semibold uppercase rounded-full transition-all duration-200 overflow-hidden group active:scale-[0.97] hover:scale-[1.02]",
                     isActive
-                      ? "border-electric-300/60 text-white"
-                      : "border-white/10 bg-white/[0.03] hover:border-white/25 hover:text-white",
+                      ? "bg-[#1a1a1a] text-white border-[#1a1a1a]"
+                      : "border-[#d1d1d1] bg-transparent text-[#666] hover:border-[#1a1a1a] hover:text-[#1a1a1a]",
                   )}
                 >
                   {isActive ? (
                     <motion.span
                       layoutId="active-shop-filter"
-                      className="absolute inset-0 bg-electric-400/[0.12]"
+                      className="absolute inset-0 bg-[#1a1a1a]"
                       transition={{ duration: 0.28, ease: "easeOut" }}
                     />
                   ) : null}
-                  <span className="relative">{item.label}</span>
+                  <span className={cn("relative z-10", isActive && "text-white")}>{item.label}</span>
                 </button>
               );
             })}
@@ -145,17 +145,17 @@ export function ShopBrowser() {
         </motion.div>
 
         {loading ? (
-          <div className="mt-12 h-64 flex items-center justify-center border border-white/5 bg-zinc-900/10 backdrop-blur-sm rounded-2xl">
-            <Loader2 className="animate-spin text-electric-300 h-8 w-8" />
+          <div className="mt-12 h-64 flex items-center justify-center border border-ivory-200 bg-white/50 backdrop-blur-sm rounded-2xl">
+            <Loader2 className="animate-spin text-gold-500 h-8 w-8" />
           </div>
         ) : (
           <>
             <div className="mt-8 flex items-center justify-between gap-4">
-              <p className="text-sm font-bold uppercase text-zinc-500">
+              <p className="text-sm font-bold uppercase text-muted">
                 {filteredProducts.length} Product
                 {filteredProducts.length === 1 ? "" : "s"}
               </p>
-              <div className="h-px flex-1 bg-gradient-to-r from-white/10 via-electric-300/30 to-transparent" />
+              <div className="h-px flex-1 bg-gradient-to-r from-ivory-200 via-gold-200 to-transparent" />
             </div>
 
             <motion.div
@@ -173,10 +173,10 @@ export function ShopBrowser() {
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-8 border border-white/10 bg-white/[0.03] p-8 text-center"
+                className="mt-8 border border-ivory-200 bg-white p-8 text-center rounded-2xl shadow-sm"
               >
-                <h2 className="text-4xl text-white">No products found.</h2>
-                <p className="mt-3 text-sm text-zinc-500">
+                <h2 className="text-4xl text-foreground font-bold">No products found.</h2>
+                <p className="mt-3 text-sm text-muted">
                   Try a different search term or switch back to all products.
                 </p>
               </motion.div>

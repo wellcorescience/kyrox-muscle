@@ -17,57 +17,59 @@ const steps = [
 const trustCards = [
   { icon: ShieldCheck, title: "Protect Against Fake Supplements", desc: "Counterfeit supplements can contain harmful substances. Verification ensures you consume only lab-tested, safe products." },
   { icon: Lock, title: "Authenticity Guaranteed", desc: "Every genuine Kyrox product has a unique, one-time-use code that is registered in our secure database at the time of manufacture." },
-  { icon: Headset, title: "Direct Brand Support", desc: "If your code is invalid or suspicious, our support team is available 24/7 via WhatsApp to resolve the issue immediately." },
+  { icon: Headset, title: "Direct Brand Support", desc: "If your code is invalid or suspicious, our support team is available to help resolve the issue immediately." },
 ];
 
 export default function VerifyPage() {
   return (
-    <div className="min-h-screen bg-black">
-      {/* HERO */}
-      <section className="relative overflow-hidden border-b border-white/10 pt-32 pb-20">
+    <div className="min-h-screen bg-ivory-50">
+      {/* HERO + VERIFICATION FORM — combined above the fold */}
+      <section className="relative overflow-hidden border-b border-ivory-200 min-h-[70vh] flex flex-col justify-center pt-16 pb-12">
         <div className="absolute inset-0 -z-10">
           <Image
             src="/images/bg/verify_bg.png"
             alt=""
             fill
-            className="object-cover object-center opacity-30"
+            className="object-cover object-center opacity-5"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/70 to-white/95" />
         </div>
 
         <div className="container max-w-4xl mx-auto px-4 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold tracking-[0.3em] uppercase mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+          <div className="inline-flex items-center gap-2 px-4 py-2 border border-emerald-500/20 bg-emerald-50 text-emerald-600 text-[10px] font-bold tracking-[0.3em] uppercase mb-6 shadow-sm rounded-full">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
             Secure Verification System
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tight mb-4">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-foreground uppercase tracking-normal mb-4 leading-[1.1]">
             Verify Your <br />
-            <span className="text-electric-300">Kyrox Product</span>
+            <span className="text-gold-500">Kyrox Product</span>
           </h1>
 
-          <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto">
+          <p className="text-muted text-lg md:text-xl max-w-2xl mx-auto mb-10">
             Enter your authenticity code to check if your product is genuine.
           </p>
+
+          <VerificationForm />
         </div>
       </section>
 
       {/* STEPS */}
-      <section className="border-b border-white/10 py-16">
+      <section className="border-b border-ivory-200 py-20 md:py-32 bg-white">
         <div className="container max-w-5xl mx-auto px-4">
           <div className="grid gap-6 md:grid-cols-3">
             {steps.map((s, i) => {
               const Icon = s.icon;
               return (
-                <div key={s.step} className="relative group border border-white/10 bg-white/[0.02] p-6 text-center">
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-electric-500 text-black text-[10px] font-black uppercase tracking-widest px-3 py-1">
+                <div key={s.step} className="relative group card-premium bg-white p-8 text-center shadow-sm hover:shadow-premium hover:-translate-y-1 transition-all duration-300 rounded-2xl">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gold-400 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
                     {s.step}
                   </div>
-                  <div className="mt-4 mx-auto w-14 h-14 grid place-items-center border border-electric-300/25 bg-electric-500/10 text-electric-300 mb-5">
+                  <div className="mt-4 mx-auto w-14 h-14 grid place-items-center border border-gold-300/40 bg-gold-50 text-gold-500 mb-5 rounded-full">
                     <Icon className="h-7 w-7" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">{s.title}</h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed">{s.desc}</p>
+                  <h3 className="text-xl font-bold text-foreground mb-2">{s.title}</h3>
+                  <p className="text-sm text-muted leading-relaxed">{s.desc}</p>
                 </div>
               );
             })}
@@ -75,39 +77,22 @@ export default function VerifyPage() {
         </div>
       </section>
 
-      {/* VERIFICATION FORM */}
-      <section className="relative overflow-hidden py-16 md:py-24">
-        <div className="absolute inset-0 -z-10">
-          <Image
-            src="/images/bg/verify_bg.png"
-            alt=""
-            fill
-            className="object-cover object-center opacity-15"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black" />
-        </div>
-
-        <div className="container max-w-4xl mx-auto px-4">
-          <VerificationForm />
-        </div>
-      </section>
-
       {/* WHY VERIFY TRUST SECTION */}
-      <section className="relative overflow-hidden border-t border-white/10 py-16 md:py-24">
+      <section className="relative overflow-hidden border-t border-ivory-200 py-20 md:py-32 bg-white">
         <div className="absolute inset-0 -z-10">
           <Image
             src="/images/bg/trust_bg.png"
             alt=""
             fill
-            className="object-cover object-center opacity-25"
+            className="object-cover object-center opacity-10"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-white/80 to-white" />
         </div>
 
         <div className="container max-w-5xl mx-auto px-4">
           <div className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-wider text-electric-300 mb-3">Trust</p>
-            <h2 className="text-4xl md:text-5xl font-black uppercase text-white tracking-tight">
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gold-500 mb-3">Trust</p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black uppercase text-foreground tracking-normal leading-[1.1]">
               Why Verify Your Product
             </h2>
           </div>
@@ -116,12 +101,12 @@ export default function VerifyPage() {
             {trustCards.map((card) => {
               const Icon = card.icon;
               return (
-                <div key={card.title} className="border border-white/10 bg-black/50 backdrop-blur-sm p-6">
-                  <div className="w-14 h-14 grid place-items-center border border-electric-300/25 bg-electric-500/10 text-electric-300 mb-5">
+                <div key={card.title} className="card-premium bg-ivory-50/50 backdrop-blur-sm p-8 shadow-sm hover:shadow-premium hover:-translate-y-1 transition-all duration-300 rounded-2xl">
+                  <div className="w-14 h-14 grid place-items-center border border-gold-300/40 bg-gold-50 text-gold-500 mb-5 rounded-full">
                     <Icon className="h-7 w-7" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-3">{card.title}</h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed">{card.desc}</p>
+                  <h3 className="text-xl font-bold text-foreground mb-3">{card.title}</h3>
+                  <p className="text-sm text-muted leading-relaxed">{card.desc}</p>
                 </div>
               );
             })}

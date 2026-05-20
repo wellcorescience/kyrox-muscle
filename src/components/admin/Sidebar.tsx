@@ -19,7 +19,7 @@ import {
 import { logout } from '@/app/admin/login/actions';
 
 const navItems = [
-  { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
   { name: 'Products', href: '/admin/products', icon: Package },
   { name: 'Authentication', href: '/admin/authentication', icon: ShieldCheck },

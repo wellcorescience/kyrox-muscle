@@ -25,6 +25,20 @@ const config: Config = {
         foreground: "hsl(var(--foreground))",
         muted: "hsl(var(--muted))",
         border: "hsl(var(--border))",
+        gold: {
+          50:  "#FBF7EE",
+          100: "#F5EDD4",
+          200: "#E8D49A",
+          300: "#D4A82A",
+          400: "#B9941C",
+          500: "#8F6F10",
+        },
+        ivory: {
+          50:  "#FDFCFA",
+          100: "#FAF8F5",
+          200: "#F2EDE5",
+          300: "#E8E2D8",
+        },
         metal: {
           100: "#f7f4ea",
           200: "#d9cda5",
@@ -62,14 +76,16 @@ const config: Config = {
         body: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
       boxShadow: {
-        glow: "0 0 40px rgba(185, 164, 104, 0.18)",
-        "inner-metal": "inset 0 1px 0 rgba(255,255,255,0.12)",
+        glow: "0 4px 14px rgba(185, 148, 28, 0.2)",
+        "inner-metal": "inset 0 1px 0 rgba(255,255,255,0.6)",
+        "premium": "0 1px 3px rgba(26, 23, 20, 0.06), 0 4px 16px rgba(26, 23, 20, 0.04)",
+        "premium-hover": "0 4px 12px rgba(26, 23, 20, 0.1), 0 12px 32px rgba(26, 23, 20, 0.06)",
       },
       backgroundImage: {
         "metal-line":
-          "linear-gradient(90deg, transparent, rgba(217, 205, 165, 0.6), transparent)",
+          "linear-gradient(90deg, transparent, rgba(185, 148, 28, 0.4), transparent)",
         "radial-steel":
-          "radial-gradient(circle at top, rgba(217, 205, 165, 0.14), transparent 36rem)",
+          "radial-gradient(circle at top, rgba(185, 148, 28, 0.08), transparent 36rem)",
       },
       keyframes: {
         "fade-up": {

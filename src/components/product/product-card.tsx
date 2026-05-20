@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, MessageCircle, ShieldCheck, ShoppingCart, Sparkles } from "lucide-react";
+import { ArrowRight, ShieldCheck, ShoppingCart, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import type { Product } from "@/types/product";
@@ -14,18 +14,18 @@ type ProductCardProps = {
 
 const toneByCategory = {
   "mass-gainer": {
-    glow: "bg-metal-200/20",
-    line: "from-transparent via-metal-200/80 to-transparent",
-    label: "from-metal-200 via-metal-300 to-metal-500",
-    ring: "border-metal-200/45",
-    text: "text-metal-200",
+    glow: "bg-gold-200/20",
+    line: "from-transparent via-gold-300/80 to-transparent",
+    label: "from-gold-300 via-gold-400 to-gold-500",
+    ring: "border-gold-300/45",
+    text: "text-gold-500",
   },
   "whey-protein": {
-    glow: "bg-electric-400/20",
-    line: "from-transparent via-electric-300/80 to-transparent",
-    label: "from-electric-300 via-electric-400 to-electric-600",
-    ring: "border-electric-300/45",
-    text: "text-electric-300",
+    glow: "bg-gold-400/20",
+    line: "from-transparent via-gold-400/80 to-transparent",
+    label: "from-gold-400 via-gold-500 to-gold-600",
+    ring: "border-gold-400/45",
+    text: "text-gold-600",
   },
 };
 
@@ -43,8 +43,8 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         delay: Math.min(index * 0.05, 0.18),
         ease: [0.22, 1, 0.36, 1],
       }}
-      whileHover={{ y: -8, scale: 1.015 }}
-      className="group relative overflow-hidden border border-white/10 bg-white/[0.035] shadow-2xl"
+      whileHover={{ y: -4 }}
+      className="group relative overflow-hidden bg-white border border-[#e8e5de] rounded-xl h-full flex flex-col justify-between transition-all duration-300 card-hover-lift product-card"
     >
       <div
         className={cn(
@@ -59,90 +59,79 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         )}
       />
 
-      <div className="relative grid min-h-[19rem] place-items-center overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_50%_10%,rgba(255,255,255,0.08),transparent_16rem),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(0,0,0,0.25))] p-4">
-        {/* Category Badge */}
-        <span
-          className={cn(
-            "absolute left-4 top-4 z-10 border bg-black/50 px-3 py-1.5 text-xs font-bold uppercase backdrop-blur-sm",
-            tone.ring,
-            tone.text,
-          )}
-        >
-          {product.categoryLabel}
-        </span>
-        {/* Verified Badge */}
-        <span className="absolute right-4 top-4 z-10 flex items-center gap-1.5 border border-emerald-500/30 bg-black/50 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400 backdrop-blur-sm">
-          <ShieldCheck className="h-3 w-3" /> Verified
-        </span>
-        <ProductImagePlaceholder product={product} />
+      <div className="relative grid min-h-[19rem] place-items-center overflow-hidden border-b border-[#e8e5de] bg-[#fafaf8] p-4">
+        {/* Verified Badge - top right */}
+        <div className="absolute top-3 right-3 z-10">
+          <span className="flex items-center gap-1.5 bg-[#1a1a1a] px-2.5 py-1 text-[11px] font-semibold text-white rounded">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Verified
+          </span>
+        </div>
+        <div className="product-image overflow-hidden w-full h-full flex items-center justify-center">
+          <ProductImagePlaceholder product={product} />
+        </div>
       </div>
 
       <div className="p-5">
+        {/* Category Label Above Title */}
+        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#999] mb-2">
+          {product.categoryLabel}
+        </p>
+
         <div className="flex items-start justify-between gap-4">
-          <h2 className="text-2xl font-bold leading-tight text-white">
+          <h2 className="text-xl font-bold leading-tight text-[#1a1a1a]">
             {product.name}
           </h2>
           <Sparkles
-            className={cn("mt-1 h-5 w-5 shrink-0", tone.text)}
+            className={cn("mt-1 h-4 w-4 shrink-0", tone.text)}
             aria-hidden
           />
         </div>
 
-        {/* MRP */}
-        <div className="mt-3 flex items-center gap-3">
-          <span className="text-2xl font-black text-white">₹{product.mrp}</span>
-          <span className="text-xs font-bold uppercase text-zinc-500">MRP</span>
+        {/* Pricing */}
+        <div className="mt-3">
+          <div className="flex items-baseline gap-2">
+            <span className="text-[13px] text-[#999] line-through">₹{Math.round(product.mrp * 1.25)}</span>
+            <span className="text-[22px] font-bold text-[#1a1a1a]">₹{product.mrp}</span>
+          </div>
+          <span className="inline-block mt-1 bg-gold-50 text-gold-500 text-[11px] font-semibold px-2 py-0.5 rounded">SAVE ₹{Math.round(product.mrp * 1.25) - product.mrp}</span>
         </div>
 
         {/* Flavors */}
-        <div className="mt-3 flex items-center gap-2">
+        <div className="mt-4 flex items-center gap-2">
           {product.availableFlavors?.map(f => (
-            <span key={f} className="text-[10px] font-bold uppercase tracking-wider border border-white/10 bg-white/5 px-2.5 py-1 text-zinc-400">{f}</span>
+            <span key={f} className="text-[10px] font-semibold uppercase tracking-[0.1em] border border-[#e8e5de] bg-[#fafaf8] px-2.5 py-1 text-[#666] rounded">{f}</span>
           ))}
         </div>
 
         {/* Highlights */}
-        <ul className="mt-4 grid gap-2">
+        <ul className="mt-5 grid gap-2">
           {product.highlights.slice(0, 3).map((highlight) => (
             <li
               key={highlight}
-              className="flex items-center justify-between border-b border-white/10 py-2 text-sm text-zinc-300"
+              className="flex items-center justify-between border-b border-[#e8e5de] py-2 text-sm text-[#555]"
             >
               <span>{highlight}</span>
               <span
-                className={cn("h-1.5 w-1.5", tone.glow.replace("/20", ""))}
+                className={cn("h-1 w-1", tone.glow.replace("/20", ""))}
               />
             </li>
           ))}
         </ul>
 
         {/* ACTION BUTTONS */}
-        <div className="mt-5 grid gap-2.5">
-          {/* WhatsApp Order */}
-          <a
-            href={`https://wa.me/917015553297?text=${encodeURIComponent(`Hi, I want to order ${product.name}.\nFlavor: \nQuantity: \n\nPlease help me with COD order.`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-12 w-full items-center justify-center gap-2 border border-[#25D366] bg-[#25D366]/10 text-sm font-bold uppercase tracking-wider text-[#25D366] hover:bg-[#25D366]/20 transition-colors"
+        <div className="mt-6 grid gap-2.5">
+          <Link
+            href={`/checkout?product=${product.slug}`}
+            className="inline-flex min-h-12 w-full items-center justify-center gap-2 bg-gold-400 text-xs font-bold uppercase tracking-[0.16em] text-white hover:brightness-110 active:scale-[0.97] transition-all duration-200 rounded-md btn-primary btn-arrow"
           >
-            <MessageCircle className="h-4 w-4" /> Order on WhatsApp
-          </a>
-          
-          {/* COD + View */}
-          <div className="grid grid-cols-2 gap-2.5">
-            <Link
-              href={`/checkout?product=${product.slug}`}
-              className="inline-flex min-h-11 items-center justify-center gap-2 border border-electric-400 bg-electric-500 text-xs font-bold uppercase tracking-wider text-black hover:bg-white transition-colors"
-            >
-              <ShoppingCart className="h-3.5 w-3.5" /> COD Order
-            </Link>
-            <Link
-              href={`/product/${product.slug}`}
-              className="inline-flex min-h-11 items-center justify-center gap-2 border border-white/15 bg-white/[0.04] text-xs font-bold uppercase tracking-wider text-white hover:border-electric-300/60 transition-colors"
-            >
-              View <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
+            Buy Now <ArrowRight className="h-4 w-4 arrow-icon" />
+          </Link>
+          <Link
+            href={`/product/${product.slug}`}
+            className="inline-flex min-h-12 w-full items-center justify-center gap-2 border border-neutral-200 bg-transparent text-xs font-bold uppercase tracking-[0.16em] text-neutral-800 hover:bg-[#1a1a1a] hover:text-white transition-all duration-200 rounded-md"
+          >
+            Product Details <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </motion.article>
@@ -178,19 +167,19 @@ function ProductImagePlaceholder({ product }: { product: Product }) {
       />
       <div
         className={cn(
-          "absolute inset-x-[18%] top-0 h-7 rounded-t-[44%] border bg-gradient-to-b from-zinc-700 to-black",
+          "absolute inset-x-[18%] top-0 h-7 rounded-t-[44%] border bg-gradient-to-b from-white to-ivory-100",
           tone.ring,
         )}
       />
       <div
         className={cn(
-          "absolute inset-x-[13%] top-5 h-[88%] overflow-hidden border bg-[linear-gradient(112deg,#24262d_0%,#08080a_46%,#17181e_100%)] shadow-2xl",
+          "absolute inset-x-[13%] top-5 h-[88%] overflow-hidden border bg-[linear-gradient(112deg,#ffffff_0%,#f5f4ef_46%,#eae8e0_100%)] shadow-md",
           tone.ring,
         )}
       >
-        <div className="absolute inset-y-0 left-0 w-1/2 bg-white/[0.055]" />
-        <div className="absolute inset-y-0 right-5 w-px bg-white/10" />
-        <div className="absolute left-1/2 top-7 h-14 w-14 -translate-x-1/2 border border-white/15 bg-white/[0.03]" />
+        <div className="absolute inset-y-0 left-0 w-1/2 bg-white/40" />
+        <div className="absolute inset-y-0 right-5 w-px bg-ivory-200" />
+        <div className="absolute left-1/2 top-7 h-14 w-14 -translate-x-1/2 border border-ivory-200 bg-white" />
         <div
           className={cn(
             "absolute inset-x-0 top-[34%] bg-gradient-to-r py-4",
@@ -204,11 +193,11 @@ function ProductImagePlaceholder({ product }: { product: Product }) {
             Muscle
           </p>
         </div>
-        <p className="absolute inset-x-5 bottom-16 text-center text-[0.58rem] font-black uppercase tracking-[0.25em] text-zinc-400">
+        <p className="absolute inset-x-5 bottom-16 text-center text-[0.58rem] font-black uppercase tracking-[0.25em] text-muted">
           {product.categoryLabel}
         </p>
-        <div className="absolute inset-x-8 bottom-10 h-1 bg-white/20" />
-        <div className="absolute inset-x-12 bottom-7 h-1 bg-white/10" />
+        <div className="absolute inset-x-8 bottom-10 h-1 bg-ivory-200" />
+        <div className="absolute inset-x-12 bottom-7 h-1 bg-ivory-200" />
       </div>
     </div>
   );

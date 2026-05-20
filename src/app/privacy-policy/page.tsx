@@ -30,7 +30,7 @@ export default function PrivacyPolicyPage() {
             <p className="mb-4">We use the information we collect to:</p>
             <ul className="list-disc pl-6 space-y-2 text-zinc-400">
               <li>Process and fulfill your orders, including Cash on Delivery (COD) verification.</li>
-              <li>Communicate with you regarding order tracking and customer support via WhatsApp.</li>
+              <li>Communicate with you regarding order tracking and customer support.</li>
               <li>Send promotional emails and exclusive offers (you may opt-out at any time).</li>
               <li>Improve our website, product offerings, and overall customer experience.</li>
             </ul>
@@ -53,7 +53,7 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">5. Contact Us</h2>
             <p>
-              If you have any questions regarding this Privacy Policy, please contact our support team at support@kyroxmuscle.com or via our official WhatsApp support channel.
+              If you have any questions regarding this Privacy Policy, please contact our support team at support@kyroxmuscle.com or through our contact page.
             </p>
           </section>
         </div>

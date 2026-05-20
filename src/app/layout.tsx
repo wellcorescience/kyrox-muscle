@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
+import { ScrollObserver } from "@/components/layout/scroll-observer";
 import { siteConfig } from "@/constants/site";
 import "./globals.css";
 
@@ -65,6 +66,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-background font-body antialiased">
+        <ScrollObserver />
         <div className="flex min-h-screen flex-col">
           <Navbar />
           <main className="flex-1">{children}</main>
