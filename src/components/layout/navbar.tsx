@@ -64,7 +64,7 @@ export function Navbar() {
             <span className="sr-only">Toggle navigation menu</span>
           </summary>
 
-          <div className="bg-carbon-900/96 absolute left-0 right-0 top-20 border-b border-white/10 p-4 shadow-2xl backdrop-blur-xl">
+          <div className="absolute left-0 right-0 top-20 z-50 border-b border-white/10 bg-[#050505] p-4 shadow-[0_8px_32px_rgba(0,0,0,0.8)]">
             <div className="container grid gap-2 p-0">
               {siteConfig.navItems.map((item) => {
                 const isActive = pathname === item.href;

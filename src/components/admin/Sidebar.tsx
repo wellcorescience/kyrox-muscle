@@ -13,8 +13,10 @@ import {
   ChevronLeft,
   Menu,
   ShoppingCart,
-  Star
+  Star,
+  LogOut
 } from 'lucide-react';
+import { logout } from '@/app/admin/login/actions';
 
 const navItems = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -95,7 +97,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         })}
       </nav>
 
-      <div className="p-4 border-t border-white/5">
+      <div className="p-4 border-t border-white/5 space-y-3">
         <div className={`flex items-center p-3 rounded-xl bg-zinc-900/50 border border-white/5 ${(collapsed && !isOpen) ? 'justify-center' : ''}`}>
           <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-zinc-700 to-zinc-600 border border-white/10 shrink-0" />
           {(!collapsed || isOpen) && (
@@ -105,6 +107,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
           )}
         </div>
+        <button
+          onClick={() => logout()}
+          className={`w-full flex items-center p-3 rounded-xl text-zinc-400 hover:text-red-400 hover:bg-red-400/10 transition-colors ${(collapsed && !isOpen) ? 'justify-center' : ''}`}
+        >
+          <LogOut size={20} className="shrink-0" />
+          {(!collapsed || isOpen) && (
+            <span className="ml-3 font-medium">Log out</span>
+          )}
+        </button>
       </div>
     </>
   );

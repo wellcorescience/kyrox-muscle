@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Sidebar } from '@/components/admin/Sidebar';
 import { Topbar } from '@/components/admin/Topbar';
 import { Menu } from 'lucide-react';
@@ -11,6 +12,11 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
 
   return (
     <div className="flex h-screen bg-[#0A0A0A] text-white overflow-hidden font-sans">
