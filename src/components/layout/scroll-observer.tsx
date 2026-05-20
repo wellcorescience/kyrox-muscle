@@ -1,26 +1,46 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export function ScrollObserver() {
-  useEffect(() => {
-    // Intersection Observer for scroll-triggered animations
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-          }
-        });
-      },
-      { threshold: 0.12 }
-    );
+  const pathname = usePathname();
 
-    document
-      .querySelectorAll(
+  useEffect(() => {
+    let cleanupObserver = () => {};
+
+    // Wait for Next.js to complete page client-side mounting
+    const timer = setTimeout(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+
+      const elements = document.querySelectorAll(
         ".animate-on-scroll, .animate-from-left, .animate-scale-in"
-      )
-      .forEach((el) => observer.observe(el));
+      );
+
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const inViewport = rect.top < (window.innerHeight || document.documentElement.clientHeight);
+        
+        if (inViewport && rect.bottom > 0) {
+          // If the element is already above the fold, display it immediately
+          el.classList.add("is-visible");
+        } else {
+          // Otherwise, observe it for scroll entry
+          observer.observe(el);
+        }
+      });
+
+      cleanupObserver = () => observer.disconnect();
+    }, 50);
 
     // Navbar scroll effect
     const handleScroll = () => {
@@ -36,10 +56,11 @@ export function ScrollObserver() {
     handleScroll(); // Check initial state
 
     return () => {
-      observer.disconnect();
+      clearTimeout(timer);
+      cleanupObserver();
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

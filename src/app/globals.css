@@ -319,13 +319,30 @@ svg {
    REDUCED MOTION — accessibility
    ================================================ */
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-on-scroll,
   .animate-from-left,
-  .animate-scale-in {
+  .animate-scale-in,
+  .animate-fade-in-up {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+    animation: none !important;
   }
   .premium-card,
   .product-card,

@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowRight, ChevronDown, Zap, ShieldCheck, Truck, Sparkles, MessageCircle } from "lucide-react";
+import { ArrowRight, ChevronDown, Zap, ShieldCheck, Truck, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,18 +23,13 @@ export function HeroSection() {
       </div>
 
       <div className="container relative z-10 py-14 lg:py-20 w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-2xl"
-        >
+        <div className="max-w-2xl animate-fade-in-up">
           <div className="inline-flex items-center gap-2 border border-gold-400/40 bg-[rgba(168,147,64,0.15)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[#A89340] backdrop-blur-md rounded-full shadow-sm">
             <Zap className="h-3.5 w-3.5" aria-hidden />
             Performance Nutrition
           </div>
 
-          <h1 className="mt-8 text-balance font-extrabold antialiased text-4xl sm:text-6xl lg:text-7xl leading-[1.1] tracking-wide uppercase text-white hero-text-shadow animate-on-scroll">
+          <h1 className="mt-8 text-balance font-extrabold antialiased text-4xl sm:text-6xl lg:text-7xl leading-[1.1] tracking-wide uppercase text-white hero-text-shadow">
             BUILT FOR <br/><span className="metallic-text">STRENGTH.</span>
           </h1>
 
@@ -71,7 +65,7 @@ export function HeroSection() {
             <div className="flex items-center gap-2"><Truck className="h-4 w-4 text-[#A89340]" /> COD Available</div>
             <div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-[#A89340]" /> Premium Ingredients</div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       <div className="pointer-events-none absolute bottom-5 left-1/2 hidden -translate-x-1/2 text-white/50 md:block">
