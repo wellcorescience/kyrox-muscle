@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { ShieldCheck, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { VerificationResult } from './VerificationResult';
-import { mockAuthCodeRecords, mockProducts } from '@/lib/mock-data';
+import { mockProducts } from '@/lib/mock-data';
 import { AuthCodeRecord } from '@/types/auth';
+import { verifyAuthCodeAction } from '@/app/actions/auth-code';
 
 interface VerificationFormProps {
   initialCode?: string;
@@ -33,33 +34,30 @@ export function VerificationForm({ initialCode = '' }: VerificationFormProps) {
     setLoading(true);
     setResult({ status: null });
 
-    // Simulate database delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const res = await verifyAuthCodeAction(cleanCode);
 
-    const record = mockAuthCodeRecords.find((r) => r.code === cleanCode);
-
-    if (!record) {
-      setResult({ status: 'invalid' });
-    } else {
-      const product = mockProducts.find((p) => p.id === record.product_id);
-      
-      let status: 'valid' | 'duplicate' = 'valid';
-      if (record.scan_count > 0) {
-        status = 'duplicate';
+      if (res.success && res.status) {
+        if (res.status === 'invalid') {
+          setResult({ status: 'invalid', record: res.record });
+        } else {
+          const record = res.record;
+          const product = mockProducts.find((p) => p.id === record?.product_id);
+          setResult({
+            status: res.status as 'valid' | 'duplicate',
+            record,
+            productName: product?.name || 'Kyrox Supplement'
+          });
+        }
+      } else {
+        setResult({ status: 'invalid' });
       }
-
-      setResult({
-        status,
-        record: {
-          ...record,
-          scan_count: record.scan_count + 1, // Simulate increment
-          first_scanned_at: record.first_scanned_at || new Date().toISOString()
-        },
-        productName: product?.name || 'Kyrox Supplement'
-      });
+    } catch (err: any) {
+      console.error('Error verifying code:', err);
+      setResult({ status: 'invalid' });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { X, Loader2, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthCodeRecord } from '@/types/auth';
+import { generateAuthCodesAction } from '@/app/actions/auth-code';
 
 interface BulkGenerateModalProps {
   isOpen: boolean;
@@ -19,47 +20,37 @@ const products = [
 
 export function BulkGenerateModal({ isOpen, onClose, onGenerated }: BulkGenerateModalProps) {
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     productId: products[0].id,
     quantity: 10,
     batchNumber: '',
   });
 
-  const generateRandomCode = (prefix: string) => {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Avoid ambiguous chars
-    let result = `KYX-${prefix}-`;
-    for (let i = 0; i < 6; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMsg(null);
 
-    // Simulate API/DB delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      const res = await generateAuthCodesAction(
+        formData.productId,
+        formData.quantity,
+        formData.batchNumber || null
+      );
 
-    const selectedProduct = products.find(p => p.id === formData.productId)!;
-    const newCodes: AuthCodeRecord[] = [];
-
-    for (let i = 0; i < formData.quantity; i++) {
-      newCodes.push({
-        id: Math.random().toString(36).substr(2, 9),
-        product_id: formData.productId,
-        code: generateRandomCode(selectedProduct.prefix),
-        batch_number: formData.batchNumber || null,
-        scan_count: 0,
-        first_scanned_at: null,
-        created_at: new Date().toISOString(),
-        is_active: true,
-      });
+      if (res.success && res.records) {
+        onGenerated(res.records);
+        onClose();
+      } else {
+        setErrorMsg(res.error || 'Failed to generate auth codes.');
+      }
+    } catch (err: any) {
+      console.error('Error generating auth codes in modal:', err);
+      setErrorMsg(err.message || 'An unexpected error occurred.');
+    } finally {
+      setLoading(false);
     }
-
-    onGenerated(newCodes);
-    setLoading(false);
-    onClose();
   };
 
   return (
@@ -97,6 +88,11 @@ export function BulkGenerateModal({ isOpen, onClose, onGenerated }: BulkGenerate
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+              {errorMsg && (
+                <div className="p-4 bg-red-950/40 border border-red-500/30 text-red-400 rounded-xl text-sm font-medium">
+                  {errorMsg}
+                </div>
+              )}
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2 ml-1">Product</label>

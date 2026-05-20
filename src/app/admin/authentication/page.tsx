@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   Search, 
   FileText, 
@@ -8,19 +8,38 @@ import {
   Eye, 
   Ban, 
   CheckCircle,
-  MoreVertical
+  MoreVertical,
+  Loader2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { mockAuthCodeRecords, mockProducts } from '@/lib/mock-data';
+import { mockProducts } from '@/lib/mock-data';
 import { AuthCodeRecord } from '@/types/auth';
 import { BulkGenerateModal } from '@/components/admin/BulkGenerateModal';
 import { exportCodesToExcel } from '@/lib/excel-export';
+import { getAuthCodeRecords, toggleAuthCodeStatusAction } from '@/app/actions/auth-code';
 
 export default function AdminAuthenticationPage() {
-  const [records, setRecords] = useState<AuthCodeRecord[]>(mockAuthCodeRecords);
+  const [records, setRecords] = useState<AuthCodeRecord[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterProduct, setFilterProduct] = useState('all');
+
+  const refreshRecords = async () => {
+    const res = await getAuthCodeRecords();
+    if (res.success && res.records) {
+      setRecords(res.records);
+    }
+  };
+
+  useEffect(() => {
+    async function load() {
+      setLoading(true);
+      await refreshRecords();
+      setLoading(false);
+    }
+    load();
+  }, []);
 
   const filteredRecords = records.filter(record => {
     const matchesSearch = record.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -30,7 +49,7 @@ export default function AdminAuthenticationPage() {
   });
 
   const handleGenerated = (newRecords: AuthCodeRecord[]) => {
-    setRecords([...newRecords, ...records]);
+    refreshRecords();
   };
 
   const handleExport = () => {
@@ -46,10 +65,23 @@ export default function AdminAuthenticationPage() {
     exportCodesToExcel(exportData, `kyrox-auth-codes-${new Date().getFullYear()}.xlsx`);
   };
 
-  const toggleStatus = (id: string) => {
+  const toggleStatus = async (id: string) => {
+    const record = records.find(r => r.id === id);
+    if (!record) return;
+
+    // Optimistic UI update
     setRecords(records.map(r => 
       r.id === id ? { ...r, is_active: !r.is_active } : r
     ));
+
+    const res = await toggleAuthCodeStatusAction(id, record.is_active);
+    if (!res.success) {
+      alert(res.error || 'Failed to update code status.');
+      // Rollback on error
+      setRecords(records.map(r => 
+        r.id === id ? { ...r, is_active: record.is_active } : r
+      ));
+    }
   };
 
   const getProductName = (id: string) => {
@@ -118,82 +150,88 @@ export default function AdminAuthenticationPage() {
         </select>
       </div>
 
-      <div className="bg-zinc-900/40 border border-white/5 rounded-2xl shadow-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <div className="min-w-[800px]">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-white/5 text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em]">
-                  <th className="px-6 py-5">Code</th>
-                  <th className="px-6 py-5">Product</th>
-                  <th className="px-6 py-5">Batch</th>
-                  <th className="px-6 py-5">Scans</th>
-                  <th className="px-6 py-5">Status</th>
-                  <th className="px-6 py-5 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                <AnimatePresence mode="popLayout">
-                  {filteredRecords.map((record) => (
-                    <motion.tr 
-                      layout
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      key={record.id} 
-                      className="group hover:bg-white/[0.02] transition-colors"
-                    >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-2 h-2 rounded-full ${record.is_active ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-red-500'}`} />
-                          <span className="font-mono text-sm tracking-widest text-white">{record.code}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-zinc-300">{getProductName(record.product_id)}</td>
-                      <td className="px-6 py-4 text-xs font-mono text-zinc-500">{record.batch_number || '---'}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <span className={`text-sm font-bold ${record.scan_count > 5 ? 'text-amber-500' : 'text-zinc-300'}`}>
-                            {record.scan_count}
+      {loading ? (
+        <div className="h-64 flex items-center justify-center border border-white/5 bg-zinc-900/10 backdrop-blur-sm rounded-2xl">
+          <Loader2 className="animate-spin text-white h-8 w-8" />
+        </div>
+      ) : (
+        <div className="bg-zinc-900/40 border border-white/5 rounded-2xl shadow-xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <div className="min-w-[800px]">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-white/5 text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em]">
+                    <th className="px-6 py-5">Code</th>
+                    <th className="px-6 py-5">Product</th>
+                    <th className="px-6 py-5">Batch</th>
+                    <th className="px-6 py-5">Scans</th>
+                    <th className="px-6 py-5">Status</th>
+                    <th className="px-6 py-5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  <AnimatePresence mode="popLayout">
+                    {filteredRecords.map((record) => (
+                      <motion.tr 
+                        layout
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        key={record.id} 
+                        className="group hover:bg-white/[0.02] transition-colors"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-2 h-2 rounded-full ${record.is_active ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' : 'bg-red-500'}`} />
+                            <span className="font-mono text-sm tracking-widest text-white">{record.code}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-zinc-300">{getProductName(record.product_id)}</td>
+                        <td className="px-6 py-4 text-xs font-mono text-zinc-500">{record.batch_number || '---'}</td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            <span className={`text-sm font-bold ${record.scan_count > 5 ? 'text-amber-500' : 'text-zinc-300'}`}>
+                              {record.scan_count}
+                            </span>
+                            {record.scan_count > 0 && <CheckCircle size={14} className="text-emerald-500/50" />}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`px-2 py-1 rounded-md text-[10px] font-bold tracking-widest uppercase border ${
+                            record.is_active 
+                              ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
+                              : 'bg-red-500/10 border-red-500/20 text-red-400'
+                          }`}>
+                            {record.is_active ? 'Active' : 'Disabled'}
                           </span>
-                          {record.scan_count > 0 && <CheckCircle size={14} className="text-emerald-500/50" />}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2 py-1 rounded-md text-[10px] font-bold tracking-widest uppercase border ${
-                          record.is_active 
-                            ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
-                            : 'bg-red-500/10 border-red-500/20 text-red-400'
-                        }`}>
-                          {record.is_active ? 'Active' : 'Disabled'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button 
-                            onClick={() => toggleStatus(record.id)}
-                            className={`p-2 rounded-lg transition-colors ${
-                              record.is_active ? 'text-zinc-500 hover:text-red-400 hover:bg-red-400/10' : 'text-zinc-500 hover:text-emerald-400 hover:bg-emerald-400/10'
-                            }`}
-                          >
-                            {record.is_active ? <Ban size={16} /> : <CheckCircle size={16} />}
-                          </button>
-                          <button className="p-2 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors">
-                            <Eye size={16} />
-                          </button>
-                          <button className="p-2 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors">
-                            <MoreVertical size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </AnimatePresence>
-              </tbody>
-            </table>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button 
+                              onClick={() => toggleStatus(record.id)}
+                              className={`p-2 rounded-lg transition-colors ${
+                                record.is_active ? 'text-zinc-500 hover:text-red-400 hover:bg-red-400/10' : 'text-zinc-500 hover:text-emerald-400 hover:bg-emerald-400/10'
+                              }`}
+                            >
+                              {record.is_active ? <Ban size={16} /> : <CheckCircle size={16} />}
+                            </button>
+                            <button className="p-2 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors">
+                              <Eye size={16} />
+                            </button>
+                            <button className="p-2 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors">
+                              <MoreVertical size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </AnimatePresence>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <BulkGenerateModal 
         isOpen={isModalOpen} 
