@@ -1,9 +1,18 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Dumbbell, ShieldCheck, Truck, Droplet, Headset } from "lucide-react";
 import { siteConfig } from "@/constants/site";
 
 export function Footer() {
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   const year = 2026;
 
   return (
