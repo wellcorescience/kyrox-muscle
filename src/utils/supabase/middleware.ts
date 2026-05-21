@@ -36,20 +36,28 @@ export async function updateSession(request: NextRequest) {
   const isLoginPage = request.nextUrl.pathname === '/admin/login';
 
   if (isTargetingAdmin) {
-    if (!adminCookie && !isLoginPage) {
+    const isAuthenticated = !!user && adminCookie === 'active';
+
+    if (!isAuthenticated && !isLoginPage) {
       const url = request.nextUrl.clone()
       url.pathname = '/admin/login'
       url.searchParams.set('message', 'Admin authentication required')
-      return NextResponse.redirect(url)
+      
+      // Construct response to clear potential orphaned cookies/sessions on redirect
+      const response = NextResponse.redirect(url);
+      if (!user) {
+        response.cookies.delete('kyrox-admin-session');
+      }
+      return response;
     }
 
-    if (adminCookie && isLoginPage) {
+    if (isAuthenticated && isLoginPage) {
       const url = request.nextUrl.clone()
       url.pathname = '/admin/dashboard'
       return NextResponse.redirect(url)
     }
 
-    if (adminCookie && request.nextUrl.pathname === '/admin') {
+    if (isAuthenticated && request.nextUrl.pathname === '/admin') {
       const url = request.nextUrl.clone()
       url.pathname = '/admin/dashboard'
       return NextResponse.redirect(url)

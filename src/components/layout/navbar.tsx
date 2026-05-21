@@ -12,6 +12,16 @@ export function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const closeMenu = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setMenuOpen(false);
+      setIsClosing(false);
+    }, 200);
+  };
 
   useEffect(() => {
     const handle = () => setScrolled(window.scrollY > 40);
@@ -136,8 +146,16 @@ export function Navbar() {
           </Link>
         </div>
 
-        <details className="group lg:hidden">
+        <details open={menuOpen} className="group lg:hidden">
           <summary
+            onClick={(e) => {
+              e.preventDefault();
+              if (menuOpen) {
+                closeMenu();
+              } else {
+                setMenuOpen(true);
+              }
+            }}
             className={cn(
               "grid h-11 w-11 cursor-pointer list-none place-items-center border transition-colors [&::-webkit-details-marker]:hidden",
               isTransparent
@@ -152,7 +170,10 @@ export function Navbar() {
 
           <div
             className={cn(
-              "absolute left-0 right-0 top-20 z-50 border-b p-4 shadow-[0_12px_32px_rgba(26,23,20,0.12)]",
+              "absolute left-0 right-0 top-20 z-50 border-b p-4 shadow-[0_12px_32px_rgba(26,23,20,0.12)] transition-all duration-200 ease-in-out",
+              menuOpen && !isClosing
+                ? "opacity-100 translate-y-0 pointer-events-auto animate-slide-down"
+                : "opacity-0 -translate-y-2 pointer-events-none",
               isTransparent
                 ? "border-white/10 bg-[#1a1a1a] shadow-[0_12px_32px_rgba(0,0,0,0.5)]"
                 : "border-ivory-200 bg-ivory-50"
@@ -166,6 +187,7 @@ export function Navbar() {
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={closeMenu}
                     className={cn(
                       "px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] border transition-colors",
                       isTransparent
@@ -186,6 +208,7 @@ export function Navbar() {
 
               <Link
                 href="/verify"
+                onClick={closeMenu}
                 className={cn(
                   "px-4 py-3.5 text-sm font-bold uppercase tracking-[0.14em] border transition-colors flex items-center gap-2 justify-center",
                   isTransparent
@@ -199,6 +222,7 @@ export function Navbar() {
 
               <Link
                 href="/cart"
+                onClick={closeMenu}
                 className={cn(
                   "px-4 py-3.5 text-sm font-bold uppercase tracking-[0.14em] border transition-colors flex items-center justify-between",
                   isTransparent
@@ -219,6 +243,7 @@ export function Navbar() {
 
               <Link
                 href="/admin/login"
+                onClick={closeMenu}
                 className={cn(
                   "px-4 py-3 text-xs font-bold uppercase tracking-[0.14em] border transition-colors opacity-75 text-center mt-1",
                   isTransparent

@@ -37,6 +37,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
 
+  const handleLogout = async () => {
+    await logout();
+  };
+
   const sidebarContent = (
     <>
       <div className="flex items-center justify-between p-6 h-20 border-b border-white/5">
@@ -107,15 +111,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
           )}
         </div>
-        <button
-          onClick={() => logout()}
-          className={`w-full flex items-center p-3 rounded-xl text-zinc-400 hover:text-red-400 hover:bg-red-400/10 transition-colors ${(collapsed && !isOpen) ? 'justify-center' : ''}`}
-        >
-          <LogOut size={20} className="shrink-0" />
-          {(!collapsed || isOpen) && (
-            <span className="ml-3 font-medium">Log out</span>
-          )}
-        </button>
+        <form action={handleLogout} className="w-full">
+          <button
+            type="submit"
+            className={`w-full flex items-center p-3 rounded-xl text-zinc-400 hover:text-red-400 hover:bg-red-400/10 transition-colors ${(collapsed && !isOpen) ? 'justify-center' : ''}`}
+          >
+            <LogOut size={20} className="shrink-0" />
+            {(!collapsed || isOpen) && (
+              <span className="ml-3 font-medium">Log out</span>
+            )}
+          </button>
+        </form>
       </div>
     </>
   );
@@ -131,27 +137,28 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         {sidebarContent}
       </motion.aside>
 
-      {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
         {isOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={onClose}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[99] lg:hidden"
-            />
-            <motion.aside
-              initial={{ x: -280 }}
-              animate={{ x: 0 }}
-              exit={{ x: -280 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 w-[280px] bg-[#0A0A0A] border-r border-white/10 flex flex-col z-[100] lg:hidden"
-            >
-              {sidebarContent}
-            </motion.aside>
-          </>
+          <motion.div
+            key="admin-sidebar-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[99] lg:hidden"
+          />
+        )}
+        {isOpen && (
+          <motion.aside
+            key="admin-sidebar-aside"
+            initial={{ x: -280 }}
+            animate={{ x: 0 }}
+            exit={{ x: -280 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed inset-y-0 left-0 w-[280px] bg-[#0A0A0A] border-r border-white/10 flex flex-col z-[100] lg:hidden"
+          >
+            {sidebarContent}
+          </motion.aside>
         )}
       </AnimatePresence>
     </>
